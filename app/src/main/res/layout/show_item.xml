@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,7 +17,7 @@
             android:cropToPadding="true"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_show"
+            tools:src="@drawable/sample_show"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +29,7 @@
             android:contentDescription="@string/main_shows_poster"
             android:padding="10dp"
             android:scaleType="fitEnd"
-            android:src="@drawable/sample_show"
+            tools:src="@drawable/sample_show"
             app:layout_constraintBottom_toBottomOf="@id/iv_show_background"
             app:layout_constraintEnd_toEndOf="@id/iv_show_background"
             app:layout_constraintHorizontal_bias="0"
@@ -42,7 +43,7 @@
             android:layout_height="60dp"
             android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
-            android:text="@string/sample_title"
+            tools:text="@string/sample_title"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/iv_show_background"
             app:layout_constraintEnd_toEndOf="@id/iv_show_background"

@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.model.Show
 
@@ -68,9 +69,18 @@ class ShowsAdapter(private val context: Context?) :
         }
 
         fun bind(show: Show?) {
-            show?.let {
-                this.show = it
-                tvName.text = it.name
+            show?.let { showData ->
+                this.show = showData
+                tvName.text = showData.name
+                context?.let { image ->
+                    Glide.with(image)
+                        .load(showData.image.medium)
+                        .into(ivMain)
+//                    Uses Cache, so no bandwidth consumed
+                    Glide.with(image)
+                        .load(showData.image.medium)
+                        .into(ivBackground)
+                }
             }
         }
     }
