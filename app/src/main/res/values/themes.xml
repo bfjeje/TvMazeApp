@@ -15,5 +15,8 @@
         <item name="android:navigationBarColor">@color/red_light</item>
         <item name="android:navigationIcon">@color/white</item>
         <item name="android:toolbarStyle">@color/red_light</item>
+        <!--        Searchview styles-->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 </resources>

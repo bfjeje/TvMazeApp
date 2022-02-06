@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_shows">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_shows"
         android:name="com.ellerbach.tvmazeapp.ui.home.HomeSeriesListFragment"
-        android:label="@string/title_home"
+        android:label="@string/shows_list"
         tools:layout="@layout/fragment_home_series_list" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.ellerbach.tvmazeapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_actors"
+        android:name="com.ellerbach.tvmazeapp.ui.dashboard.ActorsFragment"
+        android:label="@string/actors_list"
+        tools:layout="@layout/fragment_actors" />
 
 </navigation>
