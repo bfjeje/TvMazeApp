@@ -1,8 +1,8 @@
 package com.ellerbach.tvmazeapp.model
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -11,7 +11,7 @@ interface ShowDAO {
     suspend fun save(show: Show?): Long
 
     @get:Query("SELECT * FROM Show")
-    val searchAll: LiveData<List<Show?>?>
+    val searchAll: Flow<List<Show?>?>
 
     @Query("SELECT * FROM Show WHERE id = :id")
     fun searchShow(id: Long): Show?
@@ -21,7 +21,7 @@ interface ShowDAO {
 }
 
 
-@Database(entities = [Show::class], version = 1, exportSchema = false)
+@Database(entities = [Show::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ShowDatabase : RoomDatabase() {
     abstract val showDAO: ShowDAO

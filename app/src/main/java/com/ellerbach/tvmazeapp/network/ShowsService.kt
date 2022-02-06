@@ -6,6 +6,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 const val URL_BASE = "https://api.tvmaze.com/"
 private val service: ShowService by lazy {
@@ -30,5 +31,7 @@ fun getNetworkService() = service
 interface ShowService {
 
     @GET("shows")
-    suspend fun searchAllShows(): List<Show>
+    suspend fun searchAllShows(
+        @Query("page") page: Int = 0
+    ): List<Show>
 }

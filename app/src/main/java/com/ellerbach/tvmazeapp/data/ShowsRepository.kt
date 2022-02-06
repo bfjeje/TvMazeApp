@@ -1,21 +1,29 @@
 package com.ellerbach.tvmazeapp.data
 
-import androidx.lifecycle.LiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.ellerbach.tvmazeapp.model.Show
 import com.ellerbach.tvmazeapp.model.ShowDAO
 import com.ellerbach.tvmazeapp.network.ShowService
+import kotlinx.coroutines.flow.Flow
 
-class ShowsRepository(val network: ShowService, val showDAO: ShowDAO) {
+class ShowsRepository(private val showService: ShowService, private val showDAO: ShowDAO) :
+    ShowsRemoteDataSource {
 
-    val showList: LiveData<List<Show?>?> = showDAO.searchAll
+    val showList: Flow<List<Show?>?> = showDAO.searchAll
 
-    suspend fun refreshShows() {
-        try {
-            val result = network.searchAllShows()
-            showDAO.save(result)
-        } catch (cause: Throwable) {
-            throw ShowsRefreshError("Unable to refresh shows", cause)
-        }
+    override fun getShows(): Flow<PagingData<Show>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = false,
+                initialLoadSize = 249
+            ),
+            pagingSourceFactory = {
+                ShowsPagingSource(service = showService, showDAO = showDAO)
+            }
+        ).flow
     }
 }
 

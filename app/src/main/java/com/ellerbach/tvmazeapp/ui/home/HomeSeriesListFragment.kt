@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ellerbach.tvmazeapp.data.ShowsRepository
@@ -15,6 +16,8 @@ import com.ellerbach.tvmazeapp.model.ShowDatabase
 import com.ellerbach.tvmazeapp.model.getDatabase
 import com.ellerbach.tvmazeapp.network.getNetworkService
 import com.ellerbach.tvmazeapp.ui.home.recyclerview.adapter.ShowsAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class HomeSeriesListFragment : Fragment() {
 
@@ -22,10 +25,11 @@ class HomeSeriesListFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private lateinit var showAdapter: ShowsAdapter
+    private var showAdapter: ShowsAdapter? = null
     private lateinit var homeViewModel: HomeSeriesListViewModel
     private lateinit var repository: ShowsRepository
     private lateinit var database: ShowDatabase
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,46 +37,51 @@ class HomeSeriesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        _binding = FragmentHomeSeriesListBinding.inflate(inflater, container, false)
         database = getDatabase(requireContext())
         repository = ShowsRepository(getNetworkService(), database.showDAO)
-        showAdapter = ShowsAdapter(context)
 
         homeViewModel =
             ViewModelProviders
                 .of(this, HomeSeriesListViewModel.FACTORY(repository))
                 .get(HomeSeriesListViewModel::class.java)
 
-        _binding = FragmentHomeSeriesListBinding.inflate(inflater, container, false)
-
-        val root: View = binding.root
-
-        val recyclerView: RecyclerView = binding.rvShows
-        recyclerView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        homeViewModel.listOfShows.observe(viewLifecycleOwner) {
-            showAdapter.setOnItemClickListener(object : ShowsAdapter.OnItemClickListener {
-                override fun onItemClick(itemView: View?, position: Int) {
-                    Toast.makeText(requireContext(), "$position clicked", Toast.LENGTH_SHORT).show()
-                }
-            })
-            recyclerView.adapter = showAdapter
-        }
-
-        homeViewModel.refreshShowList()
-
-        return root
+        return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.listOfShows.observe(viewLifecycleOwner) { listShows ->
-            showAdapter.updateShows(listShows)
+        initView()
+        collectUiState()
+    }
+
+    private fun collectUiState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            homeViewModel.refreshShowList().collectLatest { shows ->
+                showAdapter?.setOnItemClickListener(object : ShowsAdapter.OnItemClickListener {
+                    override fun onItemClick(itemView: View?, position: Int) {
+                        Toast.makeText(requireContext(), "$position clicked", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                })
+                showAdapter?.submitData(shows)
+            }
         }
+    }
+
+    private fun initView() {
+        showAdapter = ShowsAdapter()
+        recyclerView = binding.rvShows.apply {
+            layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
+        recyclerView.adapter = showAdapter
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        showAdapter = null
         _binding = null
     }
 }

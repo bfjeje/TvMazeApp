@@ -11,7 +11,7 @@ data class Show constructor(
     val genres: List<String>,
     val schedule: Schedule,
     val image: Image,
-    val summary: String
+    val summary: String? = ""
 )
 
 data class Image(

@@ -1,26 +1,25 @@
 package com.ellerbach.tvmazeapp.ui.home.recyclerview.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.NonNull
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.model.Show
 
-class ShowsAdapter(private val context: Context?) :
-    RecyclerView.Adapter<ShowsAdapter.ViewHolder>() {
+class ShowsAdapter : PagingDataAdapter<Show, ShowsAdapter.ViewHolder>(ShowDiffCallBack()) {
 
     interface OnItemClickListener {
         fun onItemClick(itemView: View?, position: Int)
     }
 
     private lateinit var listener: OnItemClickListener
-    private var shows: ArrayList<Show?> = arrayListOf()
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
@@ -29,30 +28,15 @@ class ShowsAdapter(private val context: Context?) :
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val createdView: View =
-            LayoutInflater.from(context).inflate(R.layout.show_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.show_item, parent, false)
         return ViewHolder(createdView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val show: Show? = shows[position]
-        holder.bind(show)
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return shows.size
-    }
-
-    fun updateShows(listShows: List<Show?>?) {
-        notifyItemRangeRemoved(0, this.shows.size)
-        this.shows.clear()
-        this.shows.addAll(ArrayList(listShows))
-        this.notifyItemRangeInserted(0, this.shows.size)
-    }
-
-
-    inner class ViewHolder(
-        view: View
-    ) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private lateinit var show: Show
         private var tvName: TextView = itemView.findViewById(R.id.tv_show_name)
@@ -72,16 +56,28 @@ class ShowsAdapter(private val context: Context?) :
             show?.let { showData ->
                 this.show = showData
                 tvName.text = showData.name
-                context?.let { image ->
-                    Glide.with(image)
-                        .load(showData.image.medium)
-                        .into(ivMain)
-//                    Uses Cache, so no bandwidth consumed
-                    Glide.with(image)
-                        .load(showData.image.medium)
-                        .into(ivBackground)
+                itemView.let { item ->
+                    showData.image.medium.let {
+                        Glide.with(item)
+                            .load(showData.image.medium)
+                            .into(ivMain)
+                        //                    Uses Cache, so no bandwidth consumed
+                        Glide.with(item)
+                            .load(showData.image.medium)
+                            .into(ivBackground)
+                    }
                 }
             }
+        }
+    }
+
+    class ShowDiffCallBack : DiffUtil.ItemCallback<Show>() {
+        override fun areItemsTheSame(oldItem: Show, newItem: Show): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Show, newItem: Show): Boolean {
+            return oldItem == newItem
         }
     }
 }
