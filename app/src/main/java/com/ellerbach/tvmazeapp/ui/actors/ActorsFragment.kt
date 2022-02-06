@@ -1,4 +1,4 @@
-package com.ellerbach.tvmazeapp.ui.dashboard
+package com.ellerbach.tvmazeapp.ui.actors
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,8 +13,6 @@ class ActorsFragment : Fragment() {
 
     private var _binding: FragmentActorsBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(

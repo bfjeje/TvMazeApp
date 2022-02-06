@@ -1,4 +1,4 @@
-package com.ellerbach.tvmazeapp.ui.notifications
+package com.ellerbach.tvmazeapp.ui.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,8 +13,6 @@ class SettingsFragment : Fragment() {
 
     private var _binding: FragmentNotificationsBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -23,7 +21,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+            ViewModelProvider(this).get(SettingsViewModel::class.java)
 
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root

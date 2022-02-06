@@ -11,7 +11,7 @@ import java.io.IOException
 private const val SHOWS_STARTING_PAGE_INDEX = 0
 const val NETWORK_PAGE_SIZE = 248
 
-class ShowsPagingSource(
+class AllShowsPagingSource(
     private val service: ShowService,
     val showDAO: ShowDAO
 ) : PagingSource<Int, Show>() {

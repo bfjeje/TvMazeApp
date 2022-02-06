@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_actors"
-        android:name="com.ellerbach.tvmazeapp.ui.dashboard.ActorsFragment"
+        android:name="com.ellerbach.tvmazeapp.ui.actors.ActorsFragment"
         android:label="@string/actors_list"
         tools:layout="@layout/fragment_actors" />
 

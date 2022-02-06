@@ -1,13 +1,9 @@
 package com.ellerbach.tvmazeapp.ui.mainactivity
 
-import android.app.SearchManager
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ellerbach.tvmazeapp.R
@@ -30,14 +26,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configSearchView() {
-        if (Intent.ACTION_SEARCH == intent.action) {
-            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
-                mainViewModel.search(query)
-                //                doMySearch(query)
-            }
-        }
 
-        binding.searchView.isSubmitButtonEnabled = true
+        binding.searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    mainViewModel.search(newText)
+                    return false
+                }
+            })
     }
 
     private fun initNavHost() {
@@ -48,15 +48,5 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         navView.setupWithNavController(navController)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        (menu?.findItem(R.id.search_view)?.actionView as SearchView).apply {
-            setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            setIconifiedByDefault(false)
-        }
-        return true
     }
 }

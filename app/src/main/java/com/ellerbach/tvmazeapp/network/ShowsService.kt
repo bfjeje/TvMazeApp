@@ -1,5 +1,6 @@
 package com.ellerbach.tvmazeapp.network
 
+import com.ellerbach.tvmazeapp.model.SearchSpecificShow
 import com.ellerbach.tvmazeapp.model.Show
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,4 +35,9 @@ interface ShowService {
     suspend fun searchAllShows(
         @Query("page") page: Int = 0
     ): List<Show>
+
+    @GET("/search/shows")
+    suspend fun searchSpecificShow(
+        @Query("q") page: String = ""
+    ): List<SearchSpecificShow>
 }
