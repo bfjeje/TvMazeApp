@@ -11,17 +11,11 @@ import com.ellerbach.tvmazeapp.model.Show
 
 class AllShowsAdapter : PagingDataAdapter<Show, ShowViewHolder>(ShowDiffCallBack()) {
 
-    private lateinit var listener: OnItemClickListener
-
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
-    }
-
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
         val createdView: View =
             LayoutInflater.from(parent.context).inflate(R.layout.show_item, parent, false)
-        return ShowViewHolder(createdView, listener)
+        return ShowViewHolder(createdView)
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {

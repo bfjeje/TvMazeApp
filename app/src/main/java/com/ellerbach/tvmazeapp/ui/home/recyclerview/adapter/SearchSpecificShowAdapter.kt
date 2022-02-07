@@ -21,7 +21,7 @@ class SearchSpecificShowAdapter : RecyclerView.Adapter<ShowViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
         val createdView: View =
             LayoutInflater.from(parent.context).inflate(R.layout.show_item, parent, false)
-        return ShowViewHolder(createdView, listener)
+        return ShowViewHolder(createdView)
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
