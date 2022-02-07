@@ -17,6 +17,7 @@
             android:src="@drawable/sample_show"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="Show´s image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -26,7 +27,7 @@
             android:layout_height="60dp"
             android:layout_margin="10dp"
             android:autoSizeTextType="uniform"
-            android:text="The Office"
+            tools:text="The Office"
             app:layout_constraintBottom_toBottomOf="@id/iv_background_show"
             app:layout_constraintEnd_toEndOf="@id/iv_background_show"
             app:layout_constraintStart_toStartOf="@id/iv_background_show" />
@@ -38,6 +39,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:baselineAligned="false"
             app:layout_constraintTop_toBottomOf="@id/iv_background_show">
 
             <LinearLayout
@@ -48,12 +50,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_summary"
                     style="@style/Theme.TvMazeApp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="Summary:asd asdasd asd asd asd as dasd asd asd fsdgsfdg fdg fd  g "
-                    app:layout_constraintHorizontal_bias="0" />
+                    app:layout_constraintHorizontal_bias="0"
+                    tools:text="Summary:" />
             </LinearLayout>
 
             <LinearLayout
@@ -64,19 +67,20 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_days"
                     style="@style/Theme.TvMazeApp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Days: sdf sdf sdf sdf sdf sd fsd fsd fsd " />
+                    tools:text="Days:" />
 
                 <TextView
+                    android:id="@+id/tv_genres"
                     style="@style/Theme.TvMazeApp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Genres: sdf sdf sdf sdf sdf sdf sdf sdf sdf " />
+                    tools:text="Genres:" />
 
             </LinearLayout>
-
 
         </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.ellerbach.tvmazeapp.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class SearchSpecificShow constructor(
@@ -9,4 +10,4 @@ data class SearchSpecificShow constructor(
     val id: Long,
     val score: Double,
     val show: Show
-)
+) : Serializable

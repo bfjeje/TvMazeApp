@@ -13,7 +13,6 @@ import com.ellerbach.tvmazeapp.model.Show
 
 class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-
     private var tvName: TextView = itemView.findViewById(R.id.tv_show_name)
     private var ivBackground: ImageView = itemView.findViewById(R.id.iv_show_background)
     private var ivMain: ImageView = itemView.findViewById(R.id.iv_show_main)
@@ -35,7 +34,7 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 }
             }
             itemView.setOnClickListener {
-                val bundle = bundleOf("id" to showData.id)
+                val bundle = bundleOf("show" to showData)
                 itemView.findNavController()
                     .navigate(R.id.action_navigation_shows_to_showFragment, bundle)
             }

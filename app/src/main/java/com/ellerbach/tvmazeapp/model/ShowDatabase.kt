@@ -21,7 +21,7 @@ interface ShowDAO {
 }
 
 
-@Database(entities = [Show::class], version = 4, exportSchema = false)
+@Database(entities = [Show::class], version = 5, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ShowDatabase : RoomDatabase() {
     abstract val showDAO: ShowDAO
