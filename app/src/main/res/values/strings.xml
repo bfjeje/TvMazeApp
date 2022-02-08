@@ -6,4 +6,7 @@
     <string name="main_shows_poster">Main Show\'s Poster</string>
     <string name="sample_title">The Office</string>
     <string name="search_hint">Search Shows!</string>
+    <string name="shows_image">Show´s image</string>
+    <string name="genres_twodots">\"Genres: \"</string>
+    <string name="watch_space">\"Watch \"</string>
 </resources>

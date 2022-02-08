@@ -5,13 +5,16 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ExpandableListAdapter
+import android.widget.ExpandableListView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.databinding.ShowFragmentBinding
+import com.ellerbach.tvmazeapp.model.Episode
 import com.ellerbach.tvmazeapp.model.Show
 import com.ellerbach.tvmazeapp.ui.showfragment.adapter.SeasonsAdapter
 import kotlinx.coroutines.launch
@@ -32,6 +35,7 @@ class ShowFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        seasonsAdapter = SeasonsAdapter(requireContext(), listOf<Episode>())
         _binding = ShowFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,24 +50,24 @@ class ShowFragment : Fragment() {
         }
         arguments?.get("show")?.let { viewModel.setShow(it as Show) }
 
-        viewModel.showData.observe(viewLifecycleOwner, Observer {
+        viewModel.showData.observe(viewLifecycleOwner) {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.getEpisodes(it?.id.toString())
             }
-        })
+        }
 
-        viewModel.listGroup.observe(viewLifecycleOwner, Observer {
+        viewModel.listGroup.observe(viewLifecycleOwner) {
             seasonsAdapter = SeasonsAdapter(
                 requireContext(),
                 it
             )
             bindData()
-        })
+        }
 
-        viewModel.showData.observe(viewLifecycleOwner, Observer {
+        viewModel.showData.observe(viewLifecycleOwner) {
             it?.let { show ->
-                show.image.medium?.let {
-                    Glide.with(this).load(it)
+                show.image.medium?.let { image ->
+                    Glide.with(this).load(image)
                         .into(binding.ivBackgroundShow)
                 }
                 binding.tvShowName.text = show.name
@@ -83,6 +87,7 @@ class ShowFragment : Fragment() {
                         binding.tvGenres.visibility = View.GONE
                     } else {
                         show.genres.let { genresList ->
+                            binding.tvGenres.text = getString(R.string.genres_twodots)
                             for (genre: String in genresList) {
                                 if (genre == genresList.last()) {
                                     binding.tvGenres.append(genre)
@@ -95,7 +100,7 @@ class ShowFragment : Fragment() {
                     if (show.schedule.days.isNullOrEmpty() && show.schedule.time.isNullOrEmpty()) {
                         binding.tvDays.visibility = View.GONE
                     } else {
-                        binding.tvDays.text = "Watch "
+                        binding.tvDays.text = getString(R.string.watch_space)
                         if (show.schedule.days.isNotEmpty()) {
                             binding.tvDays.append("every ")
                             for (day: String? in show.schedule.days) {
@@ -106,29 +111,58 @@ class ShowFragment : Fragment() {
                                 }
                             }
                         }
-                        show.schedule.time?.let {
-                            if (it.isNotBlank()) {
-                                show.schedule.time.let { time ->
-                                    binding.tvDays.append("at $time")
-                                }
+                        show.schedule.time?.let { time ->
+                            if (time.isNotBlank()) {
+                                binding.tvDays.append("at $time")
                             }
                         }
                     }
                 }
             }
-        })
+        }
     }
 
     private fun bindData() {
         binding.expandableListview.setAdapter(seasonsAdapter)
+        binding.expandableListview.setOnGroupClickListener { parent, v, groupPosition, id ->
+            setListViewHeight(parent, groupPosition)
+            false
+        }
     }
 
-    private fun getQueryResults(query: String) {
-        //binding.expandableListview.setAdapter(seasonsAdapter)
-        //viewLifecycleOwner.lifecycleScope.launch {
-        //  val listOfShows: List<SearchSpecificShow?> = homeViewModel.searchSpecificShow(query)
-        //  specificShowAdapter?.updateShows(listOfShows)
-        //}
+    private fun setListViewHeight(
+        listView: ExpandableListView?,
+        group: Int
+    ) {
+        val listAdapter = listView?.expandableListAdapter as ExpandableListAdapter
+        var totalHeight = 0
+        val desiredWidth = View.MeasureSpec.makeMeasureSpec(
+            listView.width,
+            View.MeasureSpec.EXACTLY
+        )
+        for (i in 0 until listAdapter.groupCount) {
+            val groupItem = listAdapter.getGroupView(i, false, null, listView)
+            groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+            totalHeight += groupItem.measuredHeight
+            if (listView.isGroupExpanded(i) && i != group
+                || !listView.isGroupExpanded(i) && i == group
+            ) {
+                for (j in 0 until listAdapter.getChildrenCount(i)) {
+                    val listItem = listAdapter.getChildView(
+                        i, j, false, null,
+                        listView
+                    )
+                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+                    totalHeight += listItem.measuredHeight
+                }
+            }
+        }
+        val params = listView.layoutParams
+        var height = (totalHeight
+                + listView.dividerHeight * (listAdapter.groupCount - 1))
+        if (height < 10) height = 200
+        params.height = height
+        listView.layoutParams = params
+        listView.requestLayout()
     }
-
 }

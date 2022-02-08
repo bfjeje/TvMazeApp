@@ -7,35 +7,16 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
 import com.ellerbach.tvmazeapp.R
-import com.ellerbach.tvmazeapp.model.*
+import com.ellerbach.tvmazeapp.model.Episode
 
-class SeasonsAdapter(
-    val context: Context,
+class SeasonsAdapter internal constructor(
+    private val context: Context,
     listEpisodes: List<Episode?>
 ) :
     BaseExpandableListAdapter() {
 
     var listOfSeasons: ArrayList<Long> = arrayListOf()
     var listOfEpisodesBySeasons: HashMap<Long, ArrayList<Episode>> = HashMap()
-
-    val emptyEpisode: Episode = Episode(
-        0,
-        "",
-        "",
-        0,
-        0,
-        "",
-        "",
-        "",
-        "",
-        0,
-        Rating(0.0),
-        Image("", ""),
-        "",
-        Links(
-            Self("")
-        )
-    )
 
     init {
         for (episode: Episode? in listEpisodes) {
@@ -59,20 +40,19 @@ class SeasonsAdapter(
     }
 
     override fun getChildrenCount(season: Int): Int {
-        return listOfEpisodesBySeasons.get(listOfSeasons[season])?.size ?: 0
+        return this.listOfEpisodesBySeasons[listOfSeasons[season]]?.size ?: 0
     }
 
     override fun getGroup(season: Int): Any {
         return listOfSeasons[season]
     }
 
-    override fun getChild(season: Int, episodeOfSeason: Int): Any {
-        return listOfEpisodesBySeasons.get(listOfSeasons[season])?.get(episodeOfSeason)
-            ?: emptyEpisode
+    override fun getChild(season: Int, episodeOfSeason: Int): Episode {
+        return listOfEpisodesBySeasons[listOfSeasons[season]]!![episodeOfSeason]
     }
 
     override fun getGroupId(season: Int): Long {
-        return listOfSeasons.elementAt(season)
+        return season.toLong()
     }
 
     override fun getChildId(season: Int, episodeOfSeason: Int): Long {
@@ -89,15 +69,19 @@ class SeasonsAdapter(
         convertView: View?,
         parent: ViewGroup?
     ): View {
-        val group: String = getGroup(season).toString()
-        val convert: View = convertView
-            ?: (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-                R.layout.list_seasons,
-                parent, false
-            )
-        val textView: TextView? = convert.findViewById(R.id.list_parent)
-        textView?.text = group
-        return convert
+        var view = convertView
+        val seasonTitle: String = "" + getGroup(season)
+
+        if (view == null) {
+            val inflater =
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            view = inflater.inflate(R.layout.list_seasons, null)
+        }
+
+        val seasonTv = view!!.findViewById<TextView>(R.id.list_parent)
+        seasonTv.text = seasonTitle
+
+        return view
     }
 
     override fun getChildView(
@@ -107,19 +91,27 @@ class SeasonsAdapter(
         convertView: View?,
         parent: ViewGroup?
     ): View {
-        val child: Episode = getChild(groupPosition, childPosition) as Episode
-        val convert: View = convertView
-            ?: (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
-                R.layout.list_episodes,
-                parent
-            )
-        val textView: TextView? = convert.findViewById(R.id.list_child)
-        textView?.text = "${child.number} - ${child.name}"
-        return convert
+        var view = convertView
+        val episodeTitle = "${getChild(groupPosition, childPosition).number} - ${
+            getChild(
+                groupPosition,
+                childPosition
+            ).name
+        }"
+
+        if (view == null) {
+            val inflater =
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            view = inflater.inflate(R.layout.list_episodes, null)
+        }
+
+        val episodeTv = view!!.findViewById<TextView>(R.id.list_child)
+        episodeTv.text = episodeTitle
+
+        return view
     }
 
     override fun isChildSelectable(p0: Int, p1: Int): Boolean {
         return true
     }
-
 }
