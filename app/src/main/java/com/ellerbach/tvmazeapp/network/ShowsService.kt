@@ -1,11 +1,14 @@
 package com.ellerbach.tvmazeapp.network
 
+import com.ellerbach.tvmazeapp.model.Episode
+import com.ellerbach.tvmazeapp.model.SearchSpecificShow
 import com.ellerbach.tvmazeapp.model.Show
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 const val URL_BASE = "https://api.tvmaze.com/"
@@ -34,4 +37,14 @@ interface ShowService {
     suspend fun searchAllShows(
         @Query("page") page: Int = 0
     ): List<Show>
+
+    @GET("/search/shows")
+    suspend fun searchSpecificShow(
+        @Query("q") page: String = ""
+    ): List<SearchSpecificShow>
+
+    @GET("/shows/{id}/episodes")
+    suspend fun getEpisodes(
+        @Path("id") id: String = ""
+    ): List<Episode>
 }

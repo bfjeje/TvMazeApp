@@ -2,6 +2,7 @@ package com.ellerbach.tvmazeapp.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class Show constructor(
@@ -12,15 +13,15 @@ data class Show constructor(
     val schedule: Schedule,
     val image: Image,
     val summary: String? = ""
-)
+) : Serializable
 
 data class Image(
-    val medium: String,
-    val original: String
-)
+    val medium: String?,
+    val original: String?
+) : Serializable
 
 data class Schedule(
-    val time: String,
-    val days: List<String>
-)
+    val time: String?,
+    val days: List<String?>
+) : Serializable
 
