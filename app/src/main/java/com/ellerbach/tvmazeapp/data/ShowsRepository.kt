@@ -14,8 +14,6 @@ import java.io.Serializable
 class ShowsRepository(private val showService: ShowService, private val showDAO: ShowDAO) :
     ShowsRemoteDataSource, Serializable {
 
-    val showList: Flow<List<Show?>?> = showDAO.searchAll
-
     override fun getShows(): Flow<PagingData<Show>> {
         return Pager(
             config = PagingConfig(

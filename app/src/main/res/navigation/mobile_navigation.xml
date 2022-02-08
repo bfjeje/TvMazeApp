@@ -28,6 +28,15 @@
         android:id="@+id/showFragment"
         android:name="com.ellerbach.tvmazeapp.ui.showfragment.ShowFragment"
         android:label="show_fragment"
-        tools:layout="@layout/show_fragment" />
+        tools:layout="@layout/show_fragment">
+        <action
+            android:id="@+id/action_showFragment_to_episodeFragment"
+            app:destination="@id/episodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/episodeFragment"
+        android:name="com.ellerbach.tvmazeapp.ui.episode.EpisodeFragment"
+        android:label="episode_fragment"
+        tools:layout="@layout/episode_fragment" />
 
 </navigation>

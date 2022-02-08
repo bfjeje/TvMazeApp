@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.databinding.ShowFragmentBinding
 import com.ellerbach.tvmazeapp.model.Episode
 import com.ellerbach.tvmazeapp.model.Show
+import com.ellerbach.tvmazeapp.ui.showfragment.adapter.SeasonInterface
 import com.ellerbach.tvmazeapp.ui.showfragment.adapter.SeasonsAdapter
 import kotlinx.coroutines.launch
 
@@ -35,13 +38,17 @@ class ShowFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        seasonsAdapter = SeasonsAdapter(requireContext(), listOf<Episode>())
+        seasonsAdapter =
+            SeasonsAdapter(requireContext(), listOf<Episode>(), object : SeasonInterface {
+                override fun onEpisodeClick(episode: Episode) {
+                }
+            })
         _binding = ShowFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         arguments?.get("repository")?.let { repo ->
             viewModel =
@@ -59,7 +66,14 @@ class ShowFragment : Fragment() {
         viewModel.listGroup.observe(viewLifecycleOwner) {
             seasonsAdapter = SeasonsAdapter(
                 requireContext(),
-                it
+                it,
+                object : SeasonInterface {
+                    override fun onEpisodeClick(episode: Episode) {
+                        val bundle = bundleOf(Pair("episode", episode))
+                        this@ShowFragment.findNavController()
+                            .navigate(R.id.action_showFragment_to_episodeFragment, bundle)
+                    }
+                }
             )
             bindData()
         }
