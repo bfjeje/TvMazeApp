@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ellerbach.tvmazeapp.R
+import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.model.SearchSpecificShow
 import com.ellerbach.tvmazeapp.model.Show
 
@@ -17,7 +18,7 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private var ivBackground: ImageView = itemView.findViewById(R.id.iv_show_background)
     private var ivMain: ImageView = itemView.findViewById(R.id.iv_show_main)
 
-    fun bind(show: Show?) {
+    fun bind(show: Show?, repository: ShowsRepository) {
         show?.let { showData ->
             tvName.text = showData.name
             showData.image.medium.let {
@@ -34,7 +35,9 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 }
             }
             itemView.setOnClickListener {
-                val bundle = bundleOf("show" to showData)
+
+                val bundle = bundleOf(Pair("show", showData), Pair("repository", repository))
+
                 itemView.findNavController()
                     .navigate(R.id.action_navigation_shows_to_showFragment, bundle)
             }

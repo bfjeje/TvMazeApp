@@ -2,94 +2,105 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        tools:context=".ShowFragment">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_background_show"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:alpha="0.5"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample_show"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:contentDescription="Show´s image"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_show_name"
-            style="@style/Theme.TvMazeApp"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"
-            android:autoSizeTextType="uniform"
-            tools:text="The Office"
-            app:layout_constraintBottom_toBottomOf="@id/iv_background_show"
-            app:layout_constraintEnd_toEndOf="@id/iv_background_show"
-            app:layout_constraintStart_toStartOf="@id/iv_background_show" />
-
-        <LinearLayout
-            android:id="@+id/ll_info"
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:baselineAligned="false"
-            app:layout_constraintTop_toBottomOf="@id/iv_background_show">
+            android:background="@color/black"
+            tools:context=".ui.showfragment.ShowFragment">
+
+            <ImageView
+                android:id="@+id/iv_background_show"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:alpha="0.5"
+                android:contentDescription="Show´s image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sample_show"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_show_name"
+                style="@style/Theme.TvMazeApp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="10dp"
+                android:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="@id/iv_background_show"
+                app:layout_constraintEnd_toEndOf="@id/iv_background_show"
+                app:layout_constraintStart_toStartOf="@id/iv_background_show"
+                tools:text="The Office" />
 
             <LinearLayout
-                android:id="@+id/ll_summary"
+                android:id="@+id/ll_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_background_show">
 
-                <TextView
-                    android:id="@+id/tv_summary"
-                    style="@style/Theme.TvMazeApp"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_summary"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    app:layout_constraintHorizontal_bias="0"
-                    tools:text="Summary:" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_summary"
+                        style="@style/Theme.TvMazeApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        app:layout_constraintHorizontal_bias="0"
+                        tools:text="Summary:" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_other_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_days"
+                        style="@style/Theme.TvMazeApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Days:" />
+
+                    <TextView
+                        android:id="@+id/tv_genres"
+                        style="@style/Theme.TvMazeApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Genres:" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_other_info"
+            <ExpandableListView
+                android:id="@+id/expandable_listview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_info"
+                tools:listheader="@layout/list_seasons"
+                tools:listitem="@layout/list_episodes" />
 
-                <TextView
-                    android:id="@+id/tv_days"
-                    style="@style/Theme.TvMazeApp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Days:" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/tv_genres"
-                    style="@style/Theme.TvMazeApp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Genres:" />
+    </ScrollView>
 
-            </LinearLayout>
 
-        </LinearLayout>
-
-        <ExpandableListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ll_info" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

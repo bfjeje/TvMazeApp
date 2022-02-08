@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_actors" />
     <fragment
         android:id="@+id/showFragment"
-        android:name="com.ellerbach.tvmazeapp.ShowFragment"
+        android:name="com.ellerbach.tvmazeapp.ui.showfragment.ShowFragment"
         android:label="show_fragment"
         tools:layout="@layout/show_fragment" />
 

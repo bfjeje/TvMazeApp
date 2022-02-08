@@ -7,9 +7,11 @@ import androidx.annotation.NonNull
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.ellerbach.tvmazeapp.R
+import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.model.Show
 
-class AllShowsAdapter : PagingDataAdapter<Show, ShowViewHolder>(ShowDiffCallBack()) {
+class AllShowsAdapter(val repository: ShowsRepository) :
+    PagingDataAdapter<Show, ShowViewHolder>(ShowDiffCallBack()) {
 
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
@@ -19,7 +21,7 @@ class AllShowsAdapter : PagingDataAdapter<Show, ShowViewHolder>(ShowDiffCallBack
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), repository)
     }
 
     class ShowDiffCallBack : DiffUtil.ItemCallback<Show>() {

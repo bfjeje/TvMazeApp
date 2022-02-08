@@ -91,7 +91,7 @@ class HomeSeriesListFragment : Fragment() {
     }
 
     private fun initView() {
-        allShowAdapter = AllShowsAdapter()
+        allShowAdapter = AllShowsAdapter(repository)
         specificShowAdapter = SearchSpecificShowAdapter()
         recyclerView = binding.rvShows.apply {
             layoutManager =

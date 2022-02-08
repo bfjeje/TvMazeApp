@@ -1,4 +1,4 @@
-package com.ellerbach.tvmazeapp
+package com.ellerbach.tvmazeapp.ui.showfragment
 
 import android.os.Bundle
 import android.text.Html
@@ -6,11 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.databinding.ShowFragmentBinding
 import com.ellerbach.tvmazeapp.model.Show
+import com.ellerbach.tvmazeapp.ui.showfragment.adapter.SeasonsAdapter
+import kotlinx.coroutines.launch
 
 class ShowFragment : Fragment() {
 
@@ -18,9 +22,10 @@ class ShowFragment : Fragment() {
         fun newInstance() = ShowFragment()
     }
 
-    private val viewModel by viewModels<ShowViewModel>()
+    private lateinit var viewModel: ShowViewModel
     private var _binding: ShowFragmentBinding? = null
     private val binding get() = _binding!!
+    lateinit var seasonsAdapter: SeasonsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,21 +33,32 @@ class ShowFragment : Fragment() {
     ): View {
 
         _binding = ShowFragmentBinding.inflate(inflater, container, false)
-
-
-
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        arguments?.get("repository")?.let { repo ->
+            viewModel =
+                ViewModelProvider(this, ShowViewModel.FACTORY(repo as ShowsRepository))
+                    .get(ShowViewModel::class.java)
+        }
         arguments?.get("show")?.let { viewModel.setShow(it as Show) }
 
-        // TODO: Use the ViewModel
-    }
+        viewModel.showData.observe(viewLifecycleOwner, Observer {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.getEpisodes(it?.id.toString())
+            }
+        })
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        viewModel.listGroup.observe(viewLifecycleOwner, Observer {
+            seasonsAdapter = SeasonsAdapter(
+                requireContext(),
+                it
+            )
+            bindData()
+        })
 
         viewModel.showData.observe(viewLifecycleOwner, Observer {
             it?.let { show ->
@@ -101,6 +117,18 @@ class ShowFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun bindData() {
+        binding.expandableListview.setAdapter(seasonsAdapter)
+    }
+
+    private fun getQueryResults(query: String) {
+        //binding.expandableListview.setAdapter(seasonsAdapter)
+        //viewLifecycleOwner.lifecycleScope.launch {
+        //  val listOfShows: List<SearchSpecificShow?> = homeViewModel.searchSpecificShow(query)
+        //  specificShowAdapter?.updateShows(listOfShows)
+        //}
     }
 
 }
