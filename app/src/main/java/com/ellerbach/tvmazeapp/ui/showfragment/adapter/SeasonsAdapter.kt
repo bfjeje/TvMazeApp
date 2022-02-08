@@ -11,7 +11,8 @@ import com.ellerbach.tvmazeapp.model.Episode
 
 class SeasonsAdapter internal constructor(
     private val context: Context,
-    listEpisodes: List<Episode?>
+    listEpisodes: List<Episode?>,
+    private val listener: SeasonInterface
 ) :
     BaseExpandableListAdapter() {
 
@@ -108,10 +109,17 @@ class SeasonsAdapter internal constructor(
         val episodeTv = view!!.findViewById<TextView>(R.id.list_child)
         episodeTv.text = episodeTitle
 
+        view.setOnClickListener {
+            listener.onEpisodeClick(getChild(groupPosition, childPosition))
+        }
         return view
     }
 
     override fun isChildSelectable(p0: Int, p1: Int): Boolean {
         return true
     }
+}
+
+interface SeasonInterface {
+    fun onEpisodeClick(episode: Episode)
 }

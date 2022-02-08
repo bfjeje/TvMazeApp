@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,10 +48,12 @@ class HomeSeriesListFragment : Fragment() {
         repository = ShowsRepository(getNetworkService(), database.showDAO)
 
         homeViewModel =
-            ViewModelProvider(this, HomeSeriesListViewModel.FACTORY(repository))
-                .get(HomeSeriesListViewModel::class.java)
+            ViewModelProvider(
+                this,
+                HomeSeriesListViewModel.FACTORY(repository)
+            )[HomeSeriesListViewModel::class.java]
 
-        mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        mainActivityViewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
 
         return binding.root
     }
@@ -79,14 +80,14 @@ class HomeSeriesListFragment : Fragment() {
                 allShowAdapter?.submitData(shows)
             }
 
-            mainActivityViewModel.query.observe(viewLifecycleOwner, Observer {
+            mainActivityViewModel.query.observe(viewLifecycleOwner) {
                 if (!it.isNullOrBlank()) {
                     binding.rvShows.swapAdapter(specificShowAdapter, false)
                     getQueryResults(it)
                 } else {
                     binding.rvShows.swapAdapter(allShowAdapter, false)
                 }
-            })
+            }
         }
     }
 

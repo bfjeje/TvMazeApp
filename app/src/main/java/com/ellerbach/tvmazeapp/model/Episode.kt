@@ -20,15 +20,15 @@ data class Episode constructor(
     val rating: Rating?,
     val image: Image?,
     val summary: String?,
-    val links: Links
+    val links: Links?
 ) : Serializable
 
 data class Links(
-    val self: Self
+    val self: Self?
 ) : Serializable
 
 data class Self(
-    val href: String
+    val href: String?
 ) : Serializable
 
 data class Rating(
