@@ -101,7 +101,7 @@ class ShowFragment : Fragment() {
                             binding.tvGenres.text = getString(R.string.genres_twodots)
                             for (genre: String in genresList) {
                                 if (genre == genresList.last()) {
-                                    binding.tvGenres.append(genre)
+                                    binding.tvGenres.append(" $genre")
                                 } else {
                                     binding.tvGenres.append(" $genre ,")
                                 }
