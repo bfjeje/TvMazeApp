@@ -6,16 +6,13 @@ import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.ellerbach.tvmazeapp.R
+import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.model.SearchSpecificShow
 
-class SearchSpecificShowAdapter : RecyclerView.Adapter<ShowViewHolder>() {
+class SearchSpecificShowAdapter(val repository: ShowsRepository) :
+    RecyclerView.Adapter<ShowViewHolder>() {
 
-    private lateinit var listener: OnItemClickListener
     private var shows: ArrayList<SearchSpecificShow?> = arrayListOf()
-
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
-    }
 
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
@@ -26,7 +23,7 @@ class SearchSpecificShowAdapter : RecyclerView.Adapter<ShowViewHolder>() {
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
         val show: SearchSpecificShow? = shows[position]
-        holder.bind(show)
+        holder.bind(show, repository)
     }
 
     override fun getItemCount(): Int {

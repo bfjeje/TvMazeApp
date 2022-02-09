@@ -21,45 +21,41 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bind(show: Show?, repository: ShowsRepository) {
         show?.let { showData ->
             tvName.text = showData.name
-            showData.image.medium.let {
+            showData.image?.medium?.let { medium ->
                 itemView.let { item ->
-                    showData.image.medium.let {
-                        Glide.with(item)
-                            .load(showData.image.medium)
-                            .into(ivMain)
+                    Glide.with(item)
+                        .load(showData.image.medium)
+                        .into(ivMain)
 //                    Uses Cache, so no bandwidth consumed
-                        Glide.with(item)
-                            .load(showData.image.medium)
-                            .into(ivBackground)
-                    }
+                    Glide.with(item)
+                        .load(showData.image.medium)
+                        .into(ivBackground)
                 }
             }
             itemView.setOnClickListener {
-
                 val bundle = bundleOf(Pair("show", showData), Pair("repository", repository))
-
                 itemView.findNavController()
                     .navigate(R.id.action_navigation_shows_to_showFragment, bundle)
             }
         }
     }
 
-    fun bind(showData: SearchSpecificShow?) {
+    fun bind(showData: SearchSpecificShow?, repository: ShowsRepository) {
         showData?.let {
             tvName.text = showData.show.name
             itemView.let { item ->
-                showData.show.image.medium.let {
+                showData.show.image?.medium.let { medium ->
                     Glide.with(item)
-                        .load(showData.show.image.medium)
+                        .load(medium)
                         .into(ivMain)
 //                    Uses Cache, so no bandwidth consumed
                     Glide.with(item)
-                        .load(showData.show.image.medium)
+                        .load(medium)
                         .into(ivBackground)
                 }
             }
             itemView.setOnClickListener {
-                val bundle = bundleOf("show" to showData.show)
+                val bundle = bundleOf(Pair("show", showData.show), Pair("repository", repository))
                 itemView.findNavController()
                     .navigate(R.id.action_navigation_shows_to_showFragment, bundle)
             }

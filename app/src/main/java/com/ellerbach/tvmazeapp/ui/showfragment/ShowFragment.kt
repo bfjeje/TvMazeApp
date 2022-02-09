@@ -44,17 +44,18 @@ class ShowFragment : Fragment() {
                 }
             })
         _binding = ShowFragmentBinding.inflate(inflater, container, false)
+        arguments?.get("repository")?.let { repo ->
+            viewModel =
+                ViewModelProvider(
+                    this,
+                    ShowViewModel.FACTORY(repo as ShowsRepository)
+                )[ShowViewModel::class.java]
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        arguments?.get("repository")?.let { repo ->
-            viewModel =
-                ViewModelProvider(this, ShowViewModel.FACTORY(repo as ShowsRepository))
-                    .get(ShowViewModel::class.java)
-        }
         arguments?.get("show")?.let { viewModel.setShow(it as Show) }
 
         viewModel.showData.observe(viewLifecycleOwner) {
@@ -80,7 +81,7 @@ class ShowFragment : Fragment() {
 
         viewModel.showData.observe(viewLifecycleOwner) {
             it?.let { show ->
-                show.image.medium?.let { image ->
+                show.image?.medium?.let { image ->
                     Glide.with(this).load(image)
                         .into(binding.ivBackgroundShow)
                 }
