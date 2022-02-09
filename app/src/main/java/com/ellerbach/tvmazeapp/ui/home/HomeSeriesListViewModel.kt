@@ -1,6 +1,5 @@
 package com.ellerbach.tvmazeapp.ui.home
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -15,9 +14,6 @@ class HomeSeriesListViewModel(private val repository: ShowsRepository) : ViewMod
     companion object {
         val FACTORY = singleArgViewModelFactory(::HomeSeriesListViewModel)
     }
-
-    private val _spinner = MutableLiveData<Boolean>(false)
-    private val _snackBar = MutableLiveData<String?>()
 
     fun refreshShowList(): Flow<PagingData<Show>> {
         return repository.getShows().cachedIn(viewModelScope)

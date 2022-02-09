@@ -21,7 +21,7 @@ class AllShowsAdapter(val repository: ShowsRepository) :
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
-        holder.bind(getItem(position), repository)
+        holder.bindMainScreenShows(getItem(position), repository)
     }
 
     class ShowDiffCallBack : DiffUtil.ItemCallback<Show>() {

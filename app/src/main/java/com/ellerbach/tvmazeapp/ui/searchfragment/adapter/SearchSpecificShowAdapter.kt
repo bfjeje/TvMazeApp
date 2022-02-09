@@ -17,7 +17,7 @@ class SearchSpecificShowAdapter(
 ) :
     RecyclerView.Adapter<ShowViewHolder>() {
 
-    private var shows: ArrayList<SearchSpecificShow?> = arrayListOf()
+    private var specificShows: ArrayList<SearchSpecificShow?> = arrayListOf()
 
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
@@ -27,18 +27,18 @@ class SearchSpecificShowAdapter(
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
-        val show: SearchSpecificShow? = shows[position]
-        holder.bind(show, repository, onClickListener)
+        val specificShow: SearchSpecificShow? = specificShows[position]
+        holder.bindSearchScreenShows(specificShow, repository, onClickListener)
     }
 
     override fun getItemCount(): Int {
-        return shows.size
+        return specificShows.size
     }
 
     fun updateShows(listShows: List<SearchSpecificShow?>?) {
-        notifyItemRangeRemoved(0, this.shows.size)
-        this.shows.clear()
-        this.shows.addAll(ArrayList(listShows))
-        this.notifyItemRangeInserted(0, this.shows.size)
+        notifyItemRangeRemoved(0, this.specificShows.size)
+        this.specificShows.clear()
+        this.specificShows.addAll(ArrayList(listShows))
+        this.notifyItemRangeInserted(0, this.specificShows.size)
     }
 }
