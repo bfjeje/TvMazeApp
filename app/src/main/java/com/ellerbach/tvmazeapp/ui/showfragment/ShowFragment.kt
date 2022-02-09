@@ -83,11 +83,11 @@ class ShowFragment : Fragment() {
                 }
                 binding.tvShowName.text = show.name
                 if (show.summary.isNullOrEmpty()) {
-                    binding.llSummary.visibility = View.GONE
+                    binding.tvSummary.visibility = View.GONE
                 } else {
                     show.summary.let { html ->
                         val summaryString = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
-                        binding.tvSummary.text = "Summary: \n${summaryString}"
+                        binding.tvSummary.append(summaryString)
                     }
                 }
 
@@ -114,7 +114,7 @@ class ShowFragment : Fragment() {
                     } else {
                         binding.tvDays.text = getString(R.string.watch_space)
                         if (show.schedule.days.isNotEmpty()) {
-                            binding.tvDays.append("every ")
+                            binding.tvDays.append(" every ")
                             for (day: String? in show.schedule.days) {
                                 if (day == show.schedule.days.last()) {
                                     binding.tvDays.append("$day ")

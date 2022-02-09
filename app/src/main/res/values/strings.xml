@@ -10,4 +10,5 @@
     <string name="genres_twodots">Genres: </string>
     <string name="watch_space">Watch </string>
     <string name="episode_image">Episode\'s Image</string>
+    <string name="summary">Summary: \n</string>
 </resources>
