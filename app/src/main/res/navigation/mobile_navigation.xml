@@ -18,12 +18,6 @@
             android:id="@+id/action_navigation_shows_to_showFragment"
             app:destination="@id/showFragment" />
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_actors"
-        android:name="com.ellerbach.tvmazeapp.ui.actors.ActorsFragment"
-        android:label="@string/actors_list"
-        tools:layout="@layout/fragment_actors" />
     <fragment
         android:id="@+id/showFragment"
         android:name="com.ellerbach.tvmazeapp.ui.showfragment.ShowFragment"

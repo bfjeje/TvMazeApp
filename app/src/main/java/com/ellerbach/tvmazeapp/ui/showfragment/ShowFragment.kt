@@ -24,10 +24,6 @@ import kotlinx.coroutines.launch
 
 class ShowFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ShowFragment()
-    }
-
     private lateinit var viewModel: ShowViewModel
     private var _binding: ShowFragmentBinding? = null
     private val binding get() = _binding!!
@@ -112,6 +108,7 @@ class ShowFragment : Fragment() {
                             }
                         }
                     }
+
                     if (show.schedule.days.isNullOrEmpty() && show.schedule.time.isNullOrEmpty()) {
                         binding.tvDays.visibility = View.GONE
                     } else {

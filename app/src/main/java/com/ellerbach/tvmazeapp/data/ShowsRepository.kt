@@ -35,5 +35,3 @@ class ShowsRepository(private val showService: ShowService, private val showDAO:
         return showService.getEpisodes(id)
     }
 }
-
-class ShowsRefreshError(message: String, cause: Throwable?) : Throwable(message, cause)
