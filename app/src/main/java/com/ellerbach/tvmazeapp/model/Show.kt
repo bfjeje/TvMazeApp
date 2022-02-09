@@ -11,7 +11,7 @@ data class Show constructor(
     val name: String,
     val genres: List<String>,
     val schedule: Schedule,
-    val image: Image,
+    val image: Image?,
     val summary: String? = ""
 ) : Serializable
 
