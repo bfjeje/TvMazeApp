@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,8 +35,7 @@ class HomeSeriesListFragment : Fragment() {
     private lateinit var database: ShowDatabase
     private lateinit var recyclerView: RecyclerView
 
-
-    private lateinit var mainActivityViewModel: MainActivityViewModel
+    private val mainActivityViewModel: MainActivityViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,8 +53,6 @@ class HomeSeriesListFragment : Fragment() {
                 HomeSeriesListViewModel.FACTORY(repository)
             )[HomeSeriesListViewModel::class.java]
 
-        mainActivityViewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
-
         return binding.root
     }
 
@@ -70,8 +68,15 @@ class HomeSeriesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        lifecycle.addObserver(mainActivityViewModel)
         collectUiState()
+        mainActivityViewModel.query.observe(viewLifecycleOwner) {
+            if (!it.isNullOrBlank()) {
+                binding.rvShows.swapAdapter(specificShowAdapter, false)
+                getQueryResults(it)
+            } else {
+                binding.rvShows.swapAdapter(allShowAdapter, false)
+            }
+        }
     }
 
     private fun collectUiState() {
@@ -79,21 +84,12 @@ class HomeSeriesListFragment : Fragment() {
             homeViewModel.refreshShowList().collectLatest { shows ->
                 allShowAdapter?.submitData(shows)
             }
-
-            mainActivityViewModel.query.observe(viewLifecycleOwner) {
-                if (!it.isNullOrBlank()) {
-                    binding.rvShows.swapAdapter(specificShowAdapter, false)
-                    getQueryResults(it)
-                } else {
-                    binding.rvShows.swapAdapter(allShowAdapter, false)
-                }
-            }
         }
     }
 
     private fun initView() {
         allShowAdapter = AllShowsAdapter(repository)
-        specificShowAdapter = SearchSpecificShowAdapter()
+        specificShowAdapter = SearchSpecificShowAdapter(repository)
         recyclerView = binding.rvShows.apply {
             layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
