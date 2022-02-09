@@ -88,3 +88,4 @@ Please make sure to update tests as appropriate.
 - And finally learned to use [SearchView](https://developer.android.com/guide/topics/search/search-dialog)
 
 ## License
+[MIT License](LICENSE)
