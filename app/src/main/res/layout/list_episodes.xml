@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_background_gray"
         android:paddingStart="30dp"
+        android:layout_marginStart="10dp"
         android:paddingEnd="30dp"
         android:textColor="@color/white"
         android:textSize="20sp"
