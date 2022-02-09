@@ -30,7 +30,7 @@ You can:
 - Fill the *URL* field with this URL: <https://github.com/bfjeje/TvMazeApp.git>
 - Select in which folder you want to download the project, using the *Directory* field.
 - Click the *Clone* button to start downloading the project in the selected directory.
-- You will be asked of you want to open it in this window, or in a new one. Any choice is good here.
+- You will be asked if you want to open it in this window, or in a new one. Any choice is good here.
 - Once it´s downloaded, it will open the project, and you just have to wait a little bit, because Android Studio will do some background tasks. You will see this bar on the botom of the screen:
 
 ![img.png](instructions/botom_loading_bar.png)
