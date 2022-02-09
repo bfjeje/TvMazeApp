@@ -87,11 +87,12 @@ class ShowFragment : Fragment() {
                 }
                 binding.tvShowName.text = show.name
                 if (show.summary.isNullOrEmpty()) {
-                    binding.tvSummary.visibility = View.GONE
+                    binding.tvSummaryShow.visibility = View.GONE
                 } else {
                     show.summary.let { html ->
-                        val summaryString = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
-                        binding.tvSummary.append(summaryString)
+                        val summaryHtmlString = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+                        binding.tvSummaryShow.text =
+                            "${resources.getString(R.string.summary)} $summaryHtmlString"
                     }
                 }
 
@@ -105,9 +106,9 @@ class ShowFragment : Fragment() {
                             binding.tvGenres.text = getString(R.string.genres_twodots)
                             for (genre: String in genresList) {
                                 if (genre == genresList.last()) {
-                                    binding.tvGenres.append(genre)
+                                    binding.tvGenres.append(" $genre")
                                 } else {
-                                    binding.tvGenres.append(" $genre ,")
+                                    binding.tvGenres.append(" $genre,")
                                 }
                             }
                         }
@@ -147,7 +148,7 @@ class ShowFragment : Fragment() {
 
     private fun bindData() {
         binding.expandableListview.setAdapter(seasonsAdapter)
-        binding.expandableListview.setOnGroupClickListener { parent, v, groupPosition, id ->
+        binding.expandableListview.setOnGroupClickListener { parent, _, groupPosition, _ ->
             setListViewHeight(parent, groupPosition)
             false
         }

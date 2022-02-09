@@ -51,7 +51,7 @@ class EpisodeFragment : Fragment() {
                 }
                 episode.summary?.let { htmlSummary ->
                     val summaryString = Html.fromHtml(htmlSummary, Html.FROM_HTML_MODE_COMPACT)
-                    binding.tvSummary.append(summaryString)
+                    binding.tvSummaryEpisode.append(summaryString)
                 }
                 binding.tvEpisodeName.append("${episode.number}:\n${episode.name}")
                 binding.tvSeasonNumber.append(episode.season.toString())

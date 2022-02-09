@@ -28,10 +28,12 @@
         tools:layout="@layout/show_fragment">
         <action
             android:id="@+id/action_showFragment_to_episodeFragment"
-            app:destination="@id/episodeFragment" />
+            app:destination="@id/episodeFragment"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_showFragment_to_searchShowFragment"
-            app:destination="@id/searchShowFragment" />
+            app:destination="@id/searchShowFragment"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/episodeFragment"
@@ -40,7 +42,8 @@
         tools:layout="@layout/episode_fragment">
         <action
             android:id="@+id/action_episodeFragment_to_searchShowFragment"
-            app:destination="@id/searchShowFragment" />
+            app:destination="@id/searchShowFragment"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/searchShowFragment"
@@ -49,7 +52,7 @@
         <action
             android:id="@+id/action_searchShowFragment_to_showFragment"
             app:destination="@id/showFragment"
-
+            app:launchSingleTop="true"
             app:popUpTo="@+id/navigation_list_shows"
             app:popUpToInclusive="false" />
     </fragment>

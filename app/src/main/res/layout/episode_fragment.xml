@@ -41,8 +41,8 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:autoSizeTextType="uniform"
-                    android:textStyle="bold"
                     android:text="@string/episode"
+                    android:textStyle="bold"
                     tools:text="Episode 1: \nThe opening" />
             </RelativeLayout>
 
@@ -64,18 +64,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="20dp"
+                    android:text="@string/season"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     tools:text="Season 1" />
 
                 <TextView
-                    android:id="@+id/tv_summary"
+                    android:id="@+id/tv_summary_episode"
                     style="@style/Theme.TvMazeApp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:textSize="18sp"
                     android:text="@string/summary"
+                    android:textSize="18sp"
                     app:layout_constraintHorizontal_bias="0"
                     tools:text="Summary: " />
 

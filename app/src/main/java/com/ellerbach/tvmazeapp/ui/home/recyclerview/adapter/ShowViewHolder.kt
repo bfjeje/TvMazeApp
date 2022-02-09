@@ -25,11 +25,11 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             showData.image?.medium?.let { medium ->
                 itemView.let { item ->
                     Glide.with(item)
-                        .load(showData.image.medium)
+                        .load(medium)
                         .into(ivMain)
 //                    Uses Cache, so no bandwidth consumed
                     Glide.with(item)
-                        .load(showData.image.medium)
+                        .load(medium)
                         .into(ivBackground)
                 }
             }
