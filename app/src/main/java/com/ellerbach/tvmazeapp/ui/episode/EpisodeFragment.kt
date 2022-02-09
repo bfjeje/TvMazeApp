@@ -6,16 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
+import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.databinding.EpisodeFragmentBinding
 import com.ellerbach.tvmazeapp.model.Episode
+import com.ellerbach.tvmazeapp.ui.mainactivity.MainActivityViewModel
 
 class EpisodeFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = EpisodeFragment()
-    }
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     private var _binding: EpisodeFragmentBinding? = null
     private val binding get() = _binding!!
@@ -49,10 +51,17 @@ class EpisodeFragment : Fragment() {
                 }
                 episode.summary?.let { htmlSummary ->
                     val summaryString = Html.fromHtml(htmlSummary, Html.FROM_HTML_MODE_COMPACT)
-                    binding.tvSummary.text = "Summary:\n${summaryString}"
+                    binding.tvSummary.append(summaryString)
                 }
-                binding.tvEpisodeName.text = "Episode ${episode.number}:\n${episode.name}"
-                binding.tvSeasonNumber.text = "Season ${episode.season}"
+                binding.tvEpisodeName.append("${episode.number}:\n${episode.name}")
+                binding.tvSeasonNumber.append(episode.season.toString())
+            }
+        }
+
+        mainViewModel.query.observe(viewLifecycleOwner) {
+            if (!it.isNullOrBlank()) {
+                NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_episodeFragment_to_searchShowFragment)
             }
         }
     }

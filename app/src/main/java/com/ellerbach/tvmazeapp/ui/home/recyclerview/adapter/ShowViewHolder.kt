@@ -11,6 +11,7 @@ import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.model.SearchSpecificShow
 import com.ellerbach.tvmazeapp.model.Show
+import com.ellerbach.tvmazeapp.ui.searchfragment.OnSearchViewItemClickListener
 
 class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -40,7 +41,11 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    fun bind(showData: SearchSpecificShow?, repository: ShowsRepository) {
+    fun bind(
+        showData: SearchSpecificShow?,
+        repository: ShowsRepository,
+        onClickListener: OnSearchViewItemClickListener
+    ) {
         showData?.let {
             tvName.text = showData.show.name
             itemView.let { item ->
@@ -56,8 +61,9 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             }
             itemView.setOnClickListener {
                 val bundle = bundleOf(Pair("show", showData.show), Pair("repository", repository))
+                onClickListener.onShowClickListener()
                 itemView.findNavController()
-                    .navigate(R.id.action_navigation_shows_to_showFragment, bundle)
+                    .navigate(R.id.action_searchShowFragment_to_showFragment, bundle)
             }
         }
     }

@@ -1,7 +1,5 @@
 package com.ellerbach.tvmazeapp.ui.mainactivity
 
-import android.app.SearchManager
-import android.content.Intent
 import android.os.Bundle
 import android.widget.SearchView
 import androidx.activity.viewModels
@@ -22,14 +20,22 @@ class MainActivity : AppCompatActivity() {
         configSearchView()
     }
 
-    private fun configSearchView() {
+    override fun onResume() {
+        super.onResume()
+        observeViewModel()
+    }
 
-        if (Intent.ACTION_SEARCH == intent.action) {
-            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
-                mainViewModel.query.value = query
+    private fun observeViewModel() {
+        mainViewModel.clearSearchView.observe(this) {
+            if (it) {
+                binding.searchView.setQuery("", false)
+                binding.searchView.isIconified = true
+                mainViewModel.clearSearchView(false)
             }
         }
+    }
 
+    private fun configSearchView() {
         binding.searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
@@ -38,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     mainViewModel.query.value = newText
-                    return false
+                    return true
                 }
             })
     }

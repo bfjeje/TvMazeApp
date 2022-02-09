@@ -8,28 +8,27 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.data.ShowsRepository
-import com.ellerbach.tvmazeapp.databinding.FragmentHomeSeriesListBinding
+import com.ellerbach.tvmazeapp.databinding.SearchShowFragmentBinding
 import com.ellerbach.tvmazeapp.model.ShowDatabase
 import com.ellerbach.tvmazeapp.model.getDatabase
 import com.ellerbach.tvmazeapp.network.getNetworkService
-import com.ellerbach.tvmazeapp.ui.home.recyclerview.adapter.AllShowsAdapter
 import com.ellerbach.tvmazeapp.ui.mainactivity.MainActivityViewModel
-import kotlinx.coroutines.flow.collectLatest
+import com.ellerbach.tvmazeapp.ui.searchfragment.OnSearchViewItemClickListener
+import com.ellerbach.tvmazeapp.ui.searchfragment.SearchShowViewModel
+import com.ellerbach.tvmazeapp.ui.searchfragment.adapter.SearchSpecificShowAdapter
 import kotlinx.coroutines.launch
 
-class HomeSeriesListFragment : Fragment() {
+class SearchShowFragment : Fragment() {
 
-    private var _binding: FragmentHomeSeriesListBinding? = null
+    private var _binding: SearchShowFragmentBinding? = null
 
     private val binding get() = _binding!!
 
-    private var allShowAdapter: AllShowsAdapter? = null
-    private lateinit var homeViewModel: HomeSeriesListViewModel
+    private var specificShowAdapter: SearchSpecificShowAdapter? = null
+    private lateinit var searchViewModel: SearchShowViewModel
     private lateinit var repository: ShowsRepository
     private lateinit var database: ShowDatabase
     private lateinit var recyclerView: RecyclerView
@@ -42,51 +41,57 @@ class HomeSeriesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentHomeSeriesListBinding.inflate(inflater, container, false)
+        _binding = SearchShowFragmentBinding.inflate(inflater, container, false)
         database = getDatabase(requireContext())
         repository = ShowsRepository(getNetworkService(), database.showDAO)
 
-        homeViewModel =
+        searchViewModel =
             ViewModelProvider(
                 this,
-                HomeSeriesListViewModel.FACTORY(repository)
-            )[HomeSeriesListViewModel::class.java]
+                SearchShowViewModel.FACTORY(repository)
+            )[SearchShowViewModel::class.java]
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        collectUiState()
-        mainActivityViewModel.query.observe(viewLifecycleOwner) {
-            if (!it.isNullOrBlank()) {
-                findNavController(this)
-                    .navigate(R.id.action_navigation_list_shows_to_searchShowFragment)
-            }
+    private fun getQueryResults(query: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchViewModel.updateShows(query)
+        }
+        searchViewModel.listGroup.observe(viewLifecycleOwner) {
+            specificShowAdapter?.updateShows(it)
         }
     }
 
-    private fun collectUiState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            homeViewModel.refreshShowList().collectLatest { shows ->
-                allShowAdapter?.submitData(shows)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        mainActivityViewModel.query.observe(viewLifecycleOwner) {
+            if (!it.isNullOrBlank()) {
+                getQueryResults(it)
             }
         }
     }
 
     private fun initView() {
-        allShowAdapter = AllShowsAdapter(repository)
+        specificShowAdapter =
+            SearchSpecificShowAdapter(repository, object : OnSearchViewItemClickListener {
+                override fun onShowClickListener() {
+                    mainActivityViewModel.query.value = ""
+                    mainActivityViewModel.clearSearchView(true)
+                }
+            })
         recyclerView = binding.rvShows.apply {
             layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
-        recyclerView.adapter = allShowAdapter
+        recyclerView.adapter = specificShowAdapter
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        allShowAdapter = null
+        specificShowAdapter = null
         _binding = null
     }
 }
