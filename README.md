@@ -55,9 +55,9 @@ That´s it! Just wait until the installation is done 😃
 
 ![img.png](instructions/main_screen.png)
 
-    - if you search for a show, you will see a new list of series, based on the results of your search
+- if you search for a show, you will see a new list of series, based on the results of your search
 
-    ![img.png](instructions/specific_search.png)
+![img.png](instructions/specific_search.png)
 
 - After you click on a show, you will see some information about that show.
 
