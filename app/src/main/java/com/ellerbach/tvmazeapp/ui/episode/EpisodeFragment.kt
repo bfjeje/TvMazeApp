@@ -47,12 +47,12 @@ class EpisodeFragment : Fragment() {
                         .load(image.original)
                         .into(binding.ivBackgroundEpisode)
                 }
-                binding.tvEpisodeName.text = "Episode ${episode.number}:\n${episode.name}"
-                binding.tvSeasonNumber.text = "Season ${episode.season}"
-                episode.summary.let { htmlSummary ->
+                episode.summary?.let { htmlSummary ->
                     val summaryString = Html.fromHtml(htmlSummary, Html.FROM_HTML_MODE_COMPACT)
                     binding.tvSummary.text = "Summary:\n${summaryString}"
                 }
+                binding.tvEpisodeName.text = "Episode ${episode.number}:\n${episode.name}"
+                binding.tvSeasonNumber.text = "Season ${episode.season}"
             }
         }
     }
