@@ -72,7 +72,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/tv_summary"
+                android:id="@+id/tv_summary_show"
                 style="@style/Theme.TvMazeApp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,6 +80,16 @@
                 android:text="@string/summary"
                 android:textSize="16sp"
                 tools:text="Summary:" />
+
+            <TextView
+                android:id="@+id/season_title"
+                style="@style/Theme.TvMazeApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="10dp"
+                android:text="@string/seasons"
+                android:textSize="20sp" />
 
             <com.ellerbach.tvmazeapp.util.NonScrollExpandableListView
                 android:id="@+id/expandable_listview"

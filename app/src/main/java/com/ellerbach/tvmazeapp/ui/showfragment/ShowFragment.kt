@@ -9,8 +9,10 @@ import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.ellerbach.tvmazeapp.R
@@ -18,6 +20,7 @@ import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.databinding.ShowFragmentBinding
 import com.ellerbach.tvmazeapp.model.Episode
 import com.ellerbach.tvmazeapp.model.Show
+import com.ellerbach.tvmazeapp.ui.mainactivity.MainActivityViewModel
 import com.ellerbach.tvmazeapp.ui.showfragment.adapter.SeasonInterface
 import com.ellerbach.tvmazeapp.ui.showfragment.adapter.SeasonsAdapter
 import kotlinx.coroutines.launch
@@ -25,6 +28,7 @@ import kotlinx.coroutines.launch
 class ShowFragment : Fragment() {
 
     private lateinit var viewModel: ShowViewModel
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
     private var _binding: ShowFragmentBinding? = null
     private val binding get() = _binding!!
     lateinit var seasonsAdapter: SeasonsAdapter
@@ -83,11 +87,12 @@ class ShowFragment : Fragment() {
                 }
                 binding.tvShowName.text = show.name
                 if (show.summary.isNullOrEmpty()) {
-                    binding.tvSummary.visibility = View.GONE
+                    binding.tvSummaryShow.visibility = View.GONE
                 } else {
                     show.summary.let { html ->
-                        val summaryString = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
-                        binding.tvSummary.append(summaryString)
+                        val summaryHtmlString = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+                        binding.tvSummaryShow.text =
+                            "${resources.getString(R.string.summary)} $summaryHtmlString"
                     }
                 }
 
@@ -101,9 +106,9 @@ class ShowFragment : Fragment() {
                             binding.tvGenres.text = getString(R.string.genres_twodots)
                             for (genre: String in genresList) {
                                 if (genre == genresList.last()) {
-                                    binding.tvGenres.append(genre)
+                                    binding.tvGenres.append(" $genre")
                                 } else {
-                                    binding.tvGenres.append(" $genre ,")
+                                    binding.tvGenres.append(" $genre,")
                                 }
                             }
                         }
@@ -132,11 +137,18 @@ class ShowFragment : Fragment() {
                 }
             }
         }
+
+        mainViewModel.query.observe(viewLifecycleOwner) {
+            if (!it.isNullOrBlank()) {
+                NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_showFragment_to_searchShowFragment)
+            }
+        }
     }
 
     private fun bindData() {
         binding.expandableListview.setAdapter(seasonsAdapter)
-        binding.expandableListview.setOnGroupClickListener { parent, v, groupPosition, id ->
+        binding.expandableListview.setOnGroupClickListener { parent, _, groupPosition, _ ->
             setListViewHeight(parent, groupPosition)
             false
         }

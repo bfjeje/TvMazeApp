@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_navigation_shows_to_showFragment"
             app:destination="@id/showFragment" />
+        <action
+            android:id="@+id/action_navigation_list_shows_to_searchShowFragment"
+            app:destination="@id/searchShowFragment" />
     </fragment>
     <fragment
         android:id="@+id/showFragment"
@@ -25,12 +28,33 @@
         tools:layout="@layout/show_fragment">
         <action
             android:id="@+id/action_showFragment_to_episodeFragment"
-            app:destination="@id/episodeFragment" />
+            app:destination="@id/episodeFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_showFragment_to_searchShowFragment"
+            app:destination="@id/searchShowFragment"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/episodeFragment"
         android:name="com.ellerbach.tvmazeapp.ui.episode.EpisodeFragment"
         android:label="episode_fragment"
-        tools:layout="@layout/episode_fragment" />
+        tools:layout="@layout/episode_fragment">
+        <action
+            android:id="@+id/action_episodeFragment_to_searchShowFragment"
+            app:destination="@id/searchShowFragment"
+            app:launchSingleTop="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchShowFragment"
+        android:name="com.ellerbach.tvmazeapp.ui.home.SearchShowFragment"
+        android:label="SearchShowFragment">
+        <action
+            android:id="@+id/action_searchShowFragment_to_showFragment"
+            app:destination="@id/showFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/navigation_list_shows"
+            app:popUpToInclusive="false" />
+    </fragment>
 
 </navigation>
