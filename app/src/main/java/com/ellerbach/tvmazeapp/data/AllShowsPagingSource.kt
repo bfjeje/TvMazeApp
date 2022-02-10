@@ -32,11 +32,7 @@ class AllShowsPagingSource(
             )
             showDAO.save(showsResponse)
             val nextKey =
-                if (showsResponse.isEmpty()) {
-                    null
-                } else {
-                    pageIndex + (params.loadSize / NETWORK_PAGE_SIZE)
-                }
+                getNextKey(showsResponse, pageIndex, params)
             LoadResult.Page(
                 data = showsResponse,
                 prevKey = if (pageIndex == SHOWS_STARTING_PAGE_INDEX) null else pageIndex,
@@ -47,6 +43,16 @@ class AllShowsPagingSource(
         } catch (exception: HttpException) {
             return LoadResult.Error(exception)
         }
+    }
+
+    private fun getNextKey(
+        showsResponse: List<Show>,
+        pageIndex: Int,
+        params: LoadParams<Int>
+    ) = if (showsResponse.isEmpty()) {
+        null
+    } else {
+        pageIndex + (params.loadSize / NETWORK_PAGE_SIZE)
     }
 
 }

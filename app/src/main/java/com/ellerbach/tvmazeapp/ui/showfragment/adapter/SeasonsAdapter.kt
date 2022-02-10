@@ -12,22 +12,26 @@ import com.ellerbach.tvmazeapp.model.Episode
 class SeasonsAdapter internal constructor(
     private val context: Context,
     listEpisodes: List<Episode?>,
-    private val listener: SeasonInterface
+    private val listener: SeasonInterface? = null
 ) :
     BaseExpandableListAdapter() {
 
-    var listOfSeasons: ArrayList<Long> = arrayListOf()
-    var listOfEpisodesBySeasons: HashMap<Long, ArrayList<Episode>> = HashMap()
+    private var listOfSeasons: ArrayList<Long> = arrayListOf()
+    private var listOfEpisodesBySeasons: HashMap<Long, ArrayList<Episode>> = HashMap()
 
     init {
+        populateVariables(listEpisodes)
+    }
+
+    private fun populateVariables(listEpisodes: List<Episode?>) {
         for (episode: Episode? in listEpisodes) {
             episode?.let {
-                if (!listOfSeasons.contains(it.season)) {
+                if (isNewSeason(it)) {
                     listOfSeasons.add(it.season)
                 }
                 listOfEpisodesBySeasons.let { listOfEpisodes ->
-                    if (listOfEpisodes.containsKey(it.season)) {
-                        listOfEpisodes.get(it.season)?.add(it)
+                    if (seasonExistsInEpisode(listOfEpisodes, it)) {
+                        listOfEpisodes[it.season]?.add(it)
                     } else {
                         listOfEpisodes.put(it.season, arrayListOf(it))
                     }
@@ -35,6 +39,14 @@ class SeasonsAdapter internal constructor(
             }
         }
     }
+
+    private fun seasonExistsInEpisode(
+        listOfEpisodes: HashMap<Long, ArrayList<Episode>>,
+        it: Episode
+    ) = listOfEpisodes.containsKey(it.season)
+
+    private fun isNewSeason(it: Episode) =
+        !listOfSeasons.contains(it.season)
 
     override fun getGroupCount(): Int {
         return listOfSeasons.size
@@ -76,7 +88,7 @@ class SeasonsAdapter internal constructor(
         if (view == null) {
             val inflater =
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.list_seasons, null)
+            view = inflater.inflate(R.layout.list_seasons, parent, false)
         }
 
         val seasonTv = view!!.findViewById<TextView>(R.id.list_parent)
@@ -93,25 +105,26 @@ class SeasonsAdapter internal constructor(
         parent: ViewGroup?
     ): View {
         var view = convertView
-        val episodeTitle = "${getChild(groupPosition, childPosition).number} - ${
-            getChild(
-                groupPosition,
-                childPosition
-            ).name
+        val episode = getChild(groupPosition, childPosition)
+        val episodeTitle = "${episode.number} - ${
+            episode.name
         }"
 
         if (view == null) {
             val inflater =
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.list_episodes, null)
+            view = inflater.inflate(R.layout.list_episodes, parent, false)
         }
 
         val episodeTv = view!!.findViewById<TextView>(R.id.list_child)
         episodeTv.text = episodeTitle
 
-        view.setOnClickListener {
-            listener.onEpisodeClick(getChild(groupPosition, childPosition))
+        listener?.let { clickListener ->
+            view.setOnClickListener {
+                clickListener.onEpisodeClick(getChild(groupPosition, childPosition))
+            }
         }
+
         return view
     }
 

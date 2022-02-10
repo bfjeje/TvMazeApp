@@ -17,7 +17,7 @@
             android:cropToPadding="true"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
-            tools:src="@drawable/sample_show"
+            android:src="@drawable/image_not_found"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -29,7 +29,7 @@
             android:contentDescription="@string/main_shows_poster"
             android:padding="10dp"
             android:scaleType="fitEnd"
-            tools:src="@drawable/sample_show"
+            android:src="@drawable/image_not_found"
             app:layout_constraintBottom_toBottomOf="@id/iv_show_background"
             app:layout_constraintEnd_toEndOf="@id/iv_show_background"
             app:layout_constraintHorizontal_bias="0"

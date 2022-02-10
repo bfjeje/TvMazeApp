@@ -27,7 +27,7 @@
                     android:alpha="0.5"
                     android:contentDescription="@string/shows_image"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/sample_show" />
+                    android:src="@drawable/image_not_found" />
 
                 <TextView
                     android:id="@+id/tv_show_name"

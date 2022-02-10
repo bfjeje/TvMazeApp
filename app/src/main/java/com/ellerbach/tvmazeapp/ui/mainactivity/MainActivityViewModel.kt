@@ -1,13 +1,12 @@
 package com.ellerbach.tvmazeapp.ui.mainactivity
 
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainActivityViewModel : ViewModel(), LifecycleObserver {
 
-    val clearSearchView = MutableLiveData<Boolean>(false)
+    val clearSearchView = MutableLiveData(false)
     fun clearSearchView(value: Boolean) {
         this.clearSearchView.value = value
     }
@@ -15,6 +14,4 @@ class MainActivityViewModel : ViewModel(), LifecycleObserver {
     val query: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-    val queryLD: LiveData<String>
-        get() = query
 }

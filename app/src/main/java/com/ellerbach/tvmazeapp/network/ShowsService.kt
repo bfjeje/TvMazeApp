@@ -13,8 +13,7 @@ import retrofit2.http.Query
 
 const val URL_BASE = "https://api.tvmaze.com/"
 private val service: ShowService by lazy {
-    val logging = HttpLoggingInterceptor()
-    logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+    val logging = initializeLogging()
 
     val okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(logging)
@@ -27,6 +26,12 @@ private val service: ShowService by lazy {
         .build()
 
     retrofit.create(ShowService::class.java)
+}
+
+private fun initializeLogging(): HttpLoggingInterceptor {
+    val logging = HttpLoggingInterceptor()
+    logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+    return logging
 }
 
 fun getNetworkService() = service

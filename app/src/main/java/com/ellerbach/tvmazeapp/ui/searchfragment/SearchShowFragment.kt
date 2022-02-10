@@ -1,4 +1,4 @@
-package com.ellerbach.tvmazeapp.ui.home
+package com.ellerbach.tvmazeapp.ui.searchfragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,8 +16,6 @@ import com.ellerbach.tvmazeapp.model.ShowDatabase
 import com.ellerbach.tvmazeapp.model.getDatabase
 import com.ellerbach.tvmazeapp.network.getNetworkService
 import com.ellerbach.tvmazeapp.ui.mainactivity.MainActivityViewModel
-import com.ellerbach.tvmazeapp.ui.searchfragment.OnSearchViewItemClickListener
-import com.ellerbach.tvmazeapp.ui.searchfragment.SearchShowViewModel
 import com.ellerbach.tvmazeapp.ui.searchfragment.adapter.SearchSpecificShowAdapter
 import kotlinx.coroutines.launch
 
@@ -54,24 +52,10 @@ class SearchShowFragment : Fragment() {
         return binding.root
     }
 
-    private fun getQueryResults(query: String) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            searchViewModel.updateShows(query)
-        }
-        searchViewModel.listGroup.observe(viewLifecycleOwner) {
-            specificShowAdapter?.updateShows(it)
-        }
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        mainActivityViewModel.query.observe(viewLifecycleOwner) {
-            if (!it.isNullOrBlank()) {
-                getQueryResults(it)
-            }
-        }
+        observeSearchView()
     }
 
     private fun initView() {
@@ -88,6 +72,25 @@ class SearchShowFragment : Fragment() {
         }
         recyclerView.adapter = specificShowAdapter
     }
+
+    private fun observeSearchView() {
+        mainActivityViewModel.query.observe(viewLifecycleOwner) {
+            if (hasSomethingToSearch(it)) {
+                getQueryResults(it)
+            }
+        }
+    }
+
+    private fun getQueryResults(query: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            searchViewModel.updateShows(query)
+        }
+        searchViewModel.listGroup.observe(viewLifecycleOwner) {
+            specificShowAdapter?.updateShows(it)
+        }
+    }
+
+    private fun hasSomethingToSearch(it: String?) = !it.isNullOrBlank()
 
     override fun onDestroyView() {
         super.onDestroyView()

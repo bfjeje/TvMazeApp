@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configSearchView()
@@ -23,16 +22,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         observeViewModel()
-    }
-
-    private fun observeViewModel() {
-        mainViewModel.clearSearchView.observe(this) {
-            if (it) {
-                binding.searchView.setQuery("", false)
-                binding.searchView.isIconified = true
-                mainViewModel.clearSearchView(false)
-            }
-        }
     }
 
     private fun configSearchView() {
@@ -47,5 +36,19 @@ class MainActivity : AppCompatActivity() {
                     return true
                 }
             })
+    }
+
+    private fun observeViewModel() {
+        mainViewModel.clearSearchView.observe(this) {
+            if (it) {
+                clearSearch()
+            }
+        }
+    }
+
+    private fun clearSearch() {
+        binding.searchView.setQuery("", false)
+        binding.searchView.isIconified = true
+        mainViewModel.clearSearchView(false)
     }
 }

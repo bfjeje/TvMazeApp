@@ -19,52 +19,65 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private var ivBackground: ImageView = itemView.findViewById(R.id.iv_show_background)
     private var ivMain: ImageView = itemView.findViewById(R.id.iv_show_main)
 
-    fun bind(show: Show?, repository: ShowsRepository) {
-        show?.let { showData ->
-            tvName.text = showData.name
-            showData.image?.medium?.let { medium ->
-                itemView.let { item ->
-                    Glide.with(item)
-                        .load(medium)
-                        .into(ivMain)
-//                    Uses Cache, so no bandwidth consumed
-                    Glide.with(item)
-                        .load(medium)
-                        .into(ivBackground)
+    fun bindMainScreenShows(showData: Show?, repository: ShowsRepository) {
+        showData?.let { show ->
+            tvName.text = show.name
+            itemView.let { item ->
+                setImages(show, item)
+                item.setOnClickListener {
+                    navigateToShowFragment(
+                        show,
+                        repository,
+                        R.id.action_navigation_shows_to_showFragment
+                    )
                 }
-            }
-            itemView.setOnClickListener {
-                val bundle = bundleOf(Pair("show", showData), Pair("repository", repository))
-                itemView.findNavController()
-                    .navigate(R.id.action_navigation_shows_to_showFragment, bundle)
             }
         }
     }
 
-    fun bind(
+    fun bindSearchScreenShows(
         showData: SearchSpecificShow?,
         repository: ShowsRepository,
         onClickListener: OnSearchViewItemClickListener
     ) {
-        showData?.let {
-            tvName.text = showData.show.name
+        showData?.show?.let { show ->
+            tvName.text = show.name
             itemView.let { item ->
-                showData.show.image?.medium.let { medium ->
-                    Glide.with(item)
-                        .load(medium)
-                        .into(ivMain)
-//                    Uses Cache, so no bandwidth consumed
-                    Glide.with(item)
-                        .load(medium)
-                        .into(ivBackground)
+                setImages(show, item)
+                item.setOnClickListener {
+                    onClickListener.onShowClickListener()
+                    navigateToShowFragment(
+                        show,
+                        repository,
+                        R.id.action_searchShowFragment_to_showFragment
+                    )
                 }
             }
-            itemView.setOnClickListener {
-                val bundle = bundleOf(Pair("show", showData.show), Pair("repository", repository))
-                onClickListener.onShowClickListener()
-                itemView.findNavController()
-                    .navigate(R.id.action_searchShowFragment_to_showFragment, bundle)
-            }
         }
+    }
+
+    private fun navigateToShowFragment(
+        show: Show,
+        repository: ShowsRepository,
+        navigation: Int
+
+    ) {
+        val bundle = bundleOf(Pair("show", show), Pair("repository", repository))
+        itemView.findNavController()
+            .navigate(navigation, bundle)
+    }
+
+    private fun setImages(showData: Show, item: View) {
+        showData.image?.medium?.let { medium ->
+            setImageInImageView(item, medium, ivMain)
+            //                    Uses Cache, so no bandwidth consumed
+            setImageInImageView(item, medium, ivBackground)
+        }
+    }
+
+    private fun setImageInImageView(item: View, medium: String, imageView: ImageView) {
+        Glide.with(item)
+            .load(medium)
+            .into(imageView)
     }
 }

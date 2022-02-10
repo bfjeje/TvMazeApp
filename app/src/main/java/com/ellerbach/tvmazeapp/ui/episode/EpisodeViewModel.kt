@@ -15,7 +15,7 @@ class EpisodeViewModel : ViewModel() {
         this._episode.postValue(episode)
     }
 
-    val emptyEpisode = Episode(
+    private val emptyEpisode = Episode(
         0,
         "",
         "",

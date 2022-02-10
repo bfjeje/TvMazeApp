@@ -24,12 +24,10 @@ class EpisodeFragment : Fragment() {
 
     private val viewModel by viewModels<EpisodeViewModel>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = EpisodeFragmentBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -38,31 +36,55 @@ class EpisodeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.get("episode")?.let { episode ->
-            viewModel.setEpisode(episode as Episode)
-        }
+        getArgumentsEpisode()
+        initializeObservers(view)
+    }
 
-        viewModel.episode.observe(viewLifecycleOwner) { episode ->
-            if (episode != null) {
-                episode.image?.let { image ->
-                    Glide.with(view)
-                        .load(image.original)
-                        .into(binding.ivBackgroundEpisode)
-                }
-                episode.summary?.let { htmlSummary ->
-                    val summaryString = Html.fromHtml(htmlSummary, Html.FROM_HTML_MODE_COMPACT)
-                    binding.tvSummaryEpisode.append(summaryString)
-                }
-                binding.tvEpisodeName.append("${episode.number}:\n${episode.name}")
-                binding.tvSeasonNumber.append(episode.season.toString())
-            }
-        }
+    private fun initializeObservers(view: View) {
+        observeEpisode(view)
+        observeSearchView()
+    }
 
+    private fun observeSearchView() {
         mainViewModel.query.observe(viewLifecycleOwner) {
-            if (!it.isNullOrBlank()) {
+            if (hasSomethingToSearch(it)) {
                 NavHostFragment.findNavController(this)
                     .navigate(R.id.action_episodeFragment_to_searchShowFragment)
             }
+        }
+    }
+
+    private fun hasSomethingToSearch(it: String?) = !it.isNullOrBlank()
+
+    private fun observeEpisode(view: View) {
+        viewModel.episode.observe(viewLifecycleOwner) { episode ->
+            episode?.let {
+                setImage(episode, view)
+                setSummary(episode)
+                binding.tvEpisodeName.append(" ${episode.number}:\n${episode.name}")
+                binding.tvSeasonNumber.append(" ${episode.season}")
+            }
+        }
+    }
+
+    private fun setSummary(episode: Episode) {
+        episode.summary?.let { htmlSummary ->
+            val summaryString = Html.fromHtml(htmlSummary, Html.FROM_HTML_MODE_COMPACT)
+            binding.tvSummaryEpisode.append(summaryString)
+        }
+    }
+
+    private fun setImage(episode: Episode, view: View) {
+        episode.image?.let { image ->
+            Glide.with(view)
+                .load(image.original)
+                .into(binding.ivBackgroundEpisode)
+        }
+    }
+
+    private fun getArgumentsEpisode() {
+        arguments?.get("episode")?.let { episode ->
+            viewModel.setEpisode(episode as Episode)
         }
     }
 }
