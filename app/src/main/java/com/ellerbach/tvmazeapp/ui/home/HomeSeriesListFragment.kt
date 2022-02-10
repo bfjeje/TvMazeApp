@@ -8,16 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.databinding.FragmentHomeSeriesListBinding
-import com.ellerbach.tvmazeapp.model.SearchSpecificShow
 import com.ellerbach.tvmazeapp.model.ShowDatabase
 import com.ellerbach.tvmazeapp.model.getDatabase
 import com.ellerbach.tvmazeapp.network.getNetworkService
 import com.ellerbach.tvmazeapp.ui.home.recyclerview.adapter.AllShowsAdapter
-import com.ellerbach.tvmazeapp.ui.home.recyclerview.adapter.SearchSpecificShowAdapter
 import com.ellerbach.tvmazeapp.ui.mainactivity.MainActivityViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,7 +29,6 @@ class HomeSeriesListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var allShowAdapter: AllShowsAdapter? = null
-    private var specificShowAdapter: SearchSpecificShowAdapter? = null
     private lateinit var homeViewModel: HomeSeriesListViewModel
     private lateinit var repository: ShowsRepository
     private lateinit var database: ShowDatabase
@@ -56,25 +55,14 @@ class HomeSeriesListFragment : Fragment() {
         return binding.root
     }
 
-    private fun getQueryResults(query: String) {
-        binding.rvShows.swapAdapter(specificShowAdapter, false)
-        viewLifecycleOwner.lifecycleScope.launch {
-            val listOfShows: List<SearchSpecificShow?> = homeViewModel.searchSpecificShow(query)
-            specificShowAdapter?.updateShows(listOfShows)
-        }
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         collectUiState()
         mainActivityViewModel.query.observe(viewLifecycleOwner) {
             if (!it.isNullOrBlank()) {
-                binding.rvShows.swapAdapter(specificShowAdapter, false)
-                getQueryResults(it)
-            } else {
-                binding.rvShows.swapAdapter(allShowAdapter, false)
+                findNavController(this)
+                    .navigate(R.id.action_navigation_list_shows_to_searchShowFragment)
             }
         }
     }
@@ -89,7 +77,6 @@ class HomeSeriesListFragment : Fragment() {
 
     private fun initView() {
         allShowAdapter = AllShowsAdapter(repository)
-        specificShowAdapter = SearchSpecificShowAdapter(repository)
         recyclerView = binding.rvShows.apply {
             layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

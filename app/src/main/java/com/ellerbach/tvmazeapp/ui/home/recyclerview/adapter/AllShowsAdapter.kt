@@ -10,7 +10,7 @@ import com.ellerbach.tvmazeapp.R
 import com.ellerbach.tvmazeapp.data.ShowsRepository
 import com.ellerbach.tvmazeapp.model.Show
 
-class AllShowsAdapter(val repository: ShowsRepository) :
+class AllShowsAdapter(private val repository: ShowsRepository) :
     PagingDataAdapter<Show, ShowViewHolder>(ShowDiffCallBack()) {
 
     @NonNull
@@ -21,7 +21,7 @@ class AllShowsAdapter(val repository: ShowsRepository) :
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
-        holder.bind(getItem(position), repository)
+        holder.bindMainScreenShows(getItem(position), repository)
     }
 
     class ShowDiffCallBack : DiffUtil.ItemCallback<Show>() {
