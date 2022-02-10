@@ -12,8 +12,8 @@ import com.ellerbach.tvmazeapp.ui.home.recyclerview.adapter.ShowViewHolder
 import com.ellerbach.tvmazeapp.ui.searchfragment.OnSearchViewItemClickListener
 
 class SearchSpecificShowAdapter(
-    val repository: ShowsRepository,
-    val onClickListener: OnSearchViewItemClickListener
+    private val repository: ShowsRepository,
+    private val onClickListener: OnSearchViewItemClickListener
 ) :
     RecyclerView.Adapter<ShowViewHolder>() {
 

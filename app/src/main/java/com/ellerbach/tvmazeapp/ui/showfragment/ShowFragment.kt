@@ -30,7 +30,7 @@ class ShowFragment : Fragment() {
     private val mainViewModel: MainActivityViewModel by activityViewModels()
     private var _binding: ShowFragmentBinding? = null
     private val binding get() = _binding!!
-    lateinit var seasonsAdapter: SeasonsAdapter
+    private lateinit var seasonsAdapter: SeasonsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -122,22 +122,29 @@ class ShowFragment : Fragment() {
     }
 
     private fun setSchedule() {
+        var endFlag = false
         binding.tvDays.text = getString(R.string.watch_space)
         viewModel.days.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                binding.tvDays.append(" every ")
-                for (day: String? in it) {
-                    if (day == it.last()) {
-                        binding.tvDays.append("$day ")
-                    } else {
-                        binding.tvDays.append("$day, ")
+            if (!endFlag) {
+                if (!it.isNullOrEmpty()) {
+                    binding.tvDays.append(" every ")
+                    for (day: String? in it) {
+                        if (day == it.last()) {
+                            binding.tvDays.append("$day ")
+                        } else {
+                            binding.tvDays.append("$day, ")
+                        }
                     }
                 }
             }
+
         }
         viewModel.time.observe(viewLifecycleOwner) {
-            if (!it.isNullOrBlank()) {
-                binding.tvDays.append("at $it")
+            if (!endFlag) {
+                if (!it.isNullOrBlank()) {
+                    binding.tvDays.append("at $it")
+                    endFlag = true
+                }
             }
         }
     }

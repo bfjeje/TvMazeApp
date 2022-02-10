@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="BottomNavigation">
-        <item name="android:background">@color/red_700</item>
-        <item name="itemBackground">@color/red_700</item>
-        <item name="itemIconTint">@color/white</item>
-        <item name="itemTextColor">@color/white</item>
-    </style>
-
-
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@color/white</item>
         <item name="background">@color/red_700</item>

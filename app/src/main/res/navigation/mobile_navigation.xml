@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchShowFragment"
-        android:name="com.ellerbach.tvmazeapp.ui.home.SearchShowFragment"
+        android:name="com.ellerbach.tvmazeapp.ui.searchfragment.SearchShowFragment"
         android:label="SearchShowFragment">
         <action
             android:id="@+id/action_searchShowFragment_to_showFragment"

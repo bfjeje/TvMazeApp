@@ -31,7 +31,8 @@ You can:
 - Select in which folder you want to download the project, using the *Directory* field.
 - Click the *Clone* button to start downloading the project in the selected directory.
 - You will be asked if you want to open it in this window, or in a new one. Any choice is good here.
-- Once it´s downloaded, it will open the project, and you just have to wait a little bit, because Android Studio will do some background tasks. You will see this bar on the botom of the screen:
+- Once it´s downloaded, it will open the project, and you just have to wait a little bit, because
+  Android Studio will do some background tasks. You will see this bar on the bottom of the screen:
 
 ![img.png](instructions/botom_loading_bar.png)
   
@@ -80,12 +81,17 @@ Please make sure to update tests as appropriate.
 
 ## What I learned from this project
 
-- Learned to use [Retrofit](https://square.github.io/retrofit/) from scratch (I worked in projects where Retrofit was already there)
-- Learned to use the [Paging3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) library from scratch, and togheter with retrofit (Never used this library)
+- Learned to use [Retrofit](https://square.github.io/retrofit/) from scratch (I worked in projects
+  where Retrofit was already there)
+- Learned to use
+  the [Paging3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
+  library from scratch, and together with retrofit (Never used this library)
 - Learned to use [Glide](https://github.com/bumptech/glide) to download images
-- Learned a little bit more about [MVVM Architecture](https://developer.android.com/jetpack/guide) and [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
+- Learned a little bit more about [MVVM Architecture](https://developer.android.com/jetpack/guide)
+  and [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
 - Learned a little bit more about [Navigation](https://developer.android.com/guide/navigation)
-- And finally learned to use [SearchView](https://developer.android.com/guide/topics/search/search-dialog)
+- And finally learned to
+  use [SearchView](https://developer.android.com/guide/topics/search/search-dialog)
 
 ## License
 [MIT License](LICENSE)

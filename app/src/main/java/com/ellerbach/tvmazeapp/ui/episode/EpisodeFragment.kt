@@ -61,8 +61,8 @@ class EpisodeFragment : Fragment() {
             episode?.let {
                 setImage(episode, view)
                 setSummary(episode)
-                binding.tvEpisodeName.append("${episode.number}:\n${episode.name}")
-                binding.tvSeasonNumber.append(episode.season.toString())
+                binding.tvEpisodeName.append(" ${episode.number}:\n${episode.name}")
+                binding.tvSeasonNumber.append(" ${episode.season}")
             }
         }
     }

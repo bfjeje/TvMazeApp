@@ -1,4 +1,4 @@
-package com.ellerbach.tvmazeapp.ui.home
+package com.ellerbach.tvmazeapp.ui.searchfragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,8 +16,6 @@ import com.ellerbach.tvmazeapp.model.ShowDatabase
 import com.ellerbach.tvmazeapp.model.getDatabase
 import com.ellerbach.tvmazeapp.network.getNetworkService
 import com.ellerbach.tvmazeapp.ui.mainactivity.MainActivityViewModel
-import com.ellerbach.tvmazeapp.ui.searchfragment.OnSearchViewItemClickListener
-import com.ellerbach.tvmazeapp.ui.searchfragment.SearchShowViewModel
 import com.ellerbach.tvmazeapp.ui.searchfragment.adapter.SearchSpecificShowAdapter
 import kotlinx.coroutines.launch
 

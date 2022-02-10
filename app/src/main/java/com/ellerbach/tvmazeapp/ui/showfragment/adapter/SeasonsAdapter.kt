@@ -16,8 +16,8 @@ class SeasonsAdapter internal constructor(
 ) :
     BaseExpandableListAdapter() {
 
-    var listOfSeasons: ArrayList<Long> = arrayListOf()
-    var listOfEpisodesBySeasons: HashMap<Long, ArrayList<Episode>> = HashMap()
+    private var listOfSeasons: ArrayList<Long> = arrayListOf()
+    private var listOfEpisodesBySeasons: HashMap<Long, ArrayList<Episode>> = HashMap()
 
     init {
         populateVariables(listEpisodes)
