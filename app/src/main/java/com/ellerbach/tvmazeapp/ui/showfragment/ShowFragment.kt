@@ -1,7 +1,6 @@
 package com.ellerbach.tvmazeapp.ui.showfragment
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,18 +37,11 @@ class ShowFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        seasonsAdapter =
-            SeasonsAdapter(requireContext(), listOf<Episode>(), object : SeasonInterface {
-                override fun onEpisodeClick(episode: Episode) {
-                }
-            })
+        seasonsAdapter = SeasonsAdapter(requireContext(), listOf<Episode>())
         _binding = ShowFragmentBinding.inflate(inflater, container, false)
         arguments?.get("repository")?.let { repo ->
             viewModel =
-                ViewModelProvider(
-                    this,
-                    ShowViewModel.FACTORY(repo as ShowsRepository)
-                )[ShowViewModel::class.java]
+                getShowViewModel(repo)
         }
         return binding.root
     }
@@ -58,12 +50,10 @@ class ShowFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         arguments?.get("show")?.let { viewModel.setShow(it as Show) }
 
-        viewModel.showData.observe(viewLifecycleOwner) {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.getEpisodes(it?.id.toString())
-            }
-        }
+        setupObservers()
+    }
 
+    private fun setupObservers() {
         viewModel.listGroup.observe(viewLifecycleOwner) {
             seasonsAdapter = SeasonsAdapter(
                 requireContext(),
@@ -79,63 +69,34 @@ class ShowFragment : Fragment() {
             bindData()
         }
 
-        viewModel.showData.observe(viewLifecycleOwner) {
-            it?.let { show ->
-                show.image?.medium?.let { image ->
-                    Glide.with(this).load(image)
-                        .into(binding.ivBackgroundShow)
-                }
-                binding.tvShowName.text = show.name
-                if (show.summary.isNullOrEmpty()) {
-                    binding.tvSummaryShow.visibility = View.GONE
-                } else {
-                    show.summary.let { html ->
-                        val summaryHtmlString = Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
-                        binding.tvSummaryShow.text =
-                            "${resources.getString(R.string.summary)} $summaryHtmlString"
-                    }
-                }
-
-                if (show.genres.isNullOrEmpty() && show.schedule.days.isNullOrEmpty() && show.schedule.time.isNullOrEmpty()) {
-                    binding.llOtherInfo.visibility = View.GONE
-                } else {
-                    if (show.genres.isNullOrEmpty()) {
-                        binding.tvGenres.visibility = View.GONE
-                    } else {
-                        show.genres.let { genresList ->
-                            binding.tvGenres.text = getString(R.string.genres_twodots)
-                            for (genre: String in genresList) {
-                                if (genre == genresList.last()) {
-                                    binding.tvGenres.append(" $genre")
-                                } else {
-                                    binding.tvGenres.append(" $genre,")
-                                }
-                            }
-                        }
-                    }
-
-                    if (show.schedule.days.isNullOrEmpty() && show.schedule.time.isNullOrEmpty()) {
-                        binding.tvDays.visibility = View.GONE
-                    } else {
-                        binding.tvDays.text = getString(R.string.watch_space)
-                        if (show.schedule.days.isNotEmpty()) {
-                            binding.tvDays.append(" every ")
-                            for (day: String? in show.schedule.days) {
-                                if (day == show.schedule.days.last()) {
-                                    binding.tvDays.append("$day ")
-                                } else {
-                                    binding.tvDays.append("$day, ")
-                                }
-                            }
-                        }
-                        show.schedule.time?.let { time ->
-                            if (time.isNotBlank()) {
-                                binding.tvDays.append("at $time")
-                            }
-                        }
-                    }
+        viewModel.showData.observe(viewLifecycleOwner) { show ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.getEpisodes(show?.id.toString())
+            }
+            viewModel.showImage.observe(viewLifecycleOwner) { image ->
+                Glide.with(this).load(image)
+                    .into(binding.ivBackgroundShow)
+            }
+            viewModel.isSummaryPresent.observe(viewLifecycleOwner) { summaryPresent ->
+                when (summaryPresent) {
+                    true -> setSummary()
+                    false -> binding.tvSummaryShow.visibility = View.GONE
                 }
             }
+            viewModel.name.observe(viewLifecycleOwner) {
+                binding.tvShowName.text = it
+            }
+            viewModel.showTimeAndGenres.observe(viewLifecycleOwner) {
+                when (it) {
+                    true -> {
+                        binding.llOtherInfo.visibility = View.VISIBLE
+                        shouldShowGenres()
+                        shouldShowSchedule()
+                    }
+                    false -> binding.llOtherInfo.visibility = View.GONE
+                }
+            }
+
         }
 
         mainViewModel.query.observe(viewLifecycleOwner) {
@@ -145,6 +106,84 @@ class ShowFragment : Fragment() {
             }
         }
     }
+
+    private fun shouldShowSchedule() {
+        viewModel.isShowSchedule.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    binding.llOtherInfo.visibility = View.VISIBLE
+                    setSchedule()
+                }
+                else -> {
+                    binding.llOtherInfo.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    private fun setSchedule() {
+        binding.tvDays.text = getString(R.string.watch_space)
+        viewModel.days.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                binding.tvDays.append(" every ")
+                for (day: String? in it) {
+                    if (day == it.last()) {
+                        binding.tvDays.append("$day ")
+                    } else {
+                        binding.tvDays.append("$day, ")
+                    }
+                }
+            }
+        }
+        viewModel.time.observe(viewLifecycleOwner) {
+            if (!it.isNullOrBlank()) {
+                binding.tvDays.append("at $it")
+            }
+        }
+    }
+
+    private fun shouldShowGenres() {
+        viewModel.isShowGenres.observe(viewLifecycleOwner) {
+            when (it) {
+                true -> {
+                    binding.tvGenres.visibility = View.VISIBLE
+                    setGenres()
+                }
+                else -> {
+                    binding.tvGenres.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    private fun setGenres() {
+        viewModel.genres.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                binding.tvGenres.text = getString(R.string.genres_twodots)
+                for (genre: String? in it) {
+                    if (genre == it.last()) {
+                        binding.tvGenres.append(" $genre")
+                    } else {
+                        binding.tvGenres.append(" $genre,")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setSummary() {
+        binding.tvSummaryShow.apply {
+            visibility = View.VISIBLE
+            viewModel.showSummary.observe(viewLifecycleOwner) { summaryHtml ->
+                this.text = summaryHtml
+            }
+        }
+    }
+
+    private fun getShowViewModel(repo: Any) = ViewModelProvider(
+        this,
+        ShowViewModel.FACTORY(repo as ShowsRepository)
+    )[ShowViewModel::class.java]
 
     private fun bindData() {
         binding.expandableListview.setAdapter(seasonsAdapter)

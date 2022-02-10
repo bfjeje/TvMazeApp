@@ -12,7 +12,7 @@ import com.ellerbach.tvmazeapp.model.Episode
 class SeasonsAdapter internal constructor(
     private val context: Context,
     listEpisodes: List<Episode?>,
-    private val listener: SeasonInterface
+    private val listener: SeasonInterface? = null
 ) :
     BaseExpandableListAdapter() {
 
@@ -31,7 +31,7 @@ class SeasonsAdapter internal constructor(
                 }
                 listOfEpisodesBySeasons.let { listOfEpisodes ->
                     if (seasonExistsInEpisode(listOfEpisodes, it)) {
-                        listOfEpisodes.get(it.season)?.add(it)
+                        listOfEpisodes[it.season]?.add(it)
                     } else {
                         listOfEpisodes.put(it.season, arrayListOf(it))
                     }
@@ -113,15 +113,18 @@ class SeasonsAdapter internal constructor(
         if (view == null) {
             val inflater =
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.list_episodes, parent,false)
+            view = inflater.inflate(R.layout.list_episodes, parent, false)
         }
 
         val episodeTv = view!!.findViewById<TextView>(R.id.list_child)
         episodeTv.text = episodeTitle
 
-        view.setOnClickListener {
-            listener.onEpisodeClick(getChild(groupPosition, childPosition))
+        listener?.let { clickListener ->
+            view.setOnClickListener {
+                clickListener.onEpisodeClick(getChild(groupPosition, childPosition))
+            }
         }
+
         return view
     }
 
